@@ -1,0 +1,1 @@
+msg_boot_msg:       db 'Starting NeoOS....', ENDL, 0
