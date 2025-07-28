@@ -2,6 +2,7 @@ import os
 import subprocess
 import urllib.request
 import platform
+from pathlib import Path
 
 
 import yaml
@@ -36,14 +37,13 @@ LIN_DIST:str = None
 
 try:
     LIN_DIST = platform.freedesktop_os_release();
-    print(LIN_DIST)
 except FileNotFoundError:
     LIN_DIST = platform.system()
 
 
-MAIN_PATH = __file__.replace("setup_toolchain.py","")
+MAIN_PATH = Path(__file__.replace("setup_toolchain.py","")).parent.absolute()
 
-TOOLCHAIN_FOLDER = f"{MAIN_PATH}toolchain/"
+TOOLCHAIN_FOLDER = f"{MAIN_PATH}/toolchain/"
 print(TOOLCHAIN_FOLDER)
 
 TOOLCHAIN_PREFIX = os.path.abspath(f"{TOOLCHAIN_FOLDER}/{TARGET}")
