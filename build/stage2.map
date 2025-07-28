@@ -1,7 +1,7 @@
 Open Watcom Linker Version 2.0 beta Mar  1 2025 02:26:26 (64-bit)
 Copyright (c) 2002-2025 The Open Watcom Contributors. All Rights Reserved.
 Portions Copyright (c) 1985-2002 Sybase, Inc. All Rights Reserved.
-Created on:       25/07/28 11:32:50
+Created on:       25/07/28 13:37:04
 Executable Image: /home/dani23/NeoOS_new/build/stage2.bin
 creating a RAW Binary Image executable
 
@@ -13,7 +13,7 @@ creating a RAW Binary Image executable
 Group                           Address              Size
 =====                           =======              ====
 
-DGROUP                          0000009a             00000014
+DGROUP                          00000600             00000098
 
 
 
@@ -25,10 +25,10 @@ Segment                Class          Group          Address         Size
 =======                =====          =====          =======         ====
 
 _ENTRY                 CODE           AUTO           00000000        00000013
-_TEXT                  CODE           AUTO           00000013        00000086
-CONST                  DATA           DGROUP         0000009a        00000014
-CONST2                 DATA           DGROUP         000000ae        00000000
-_DATA                  DATA           DGROUP         000000ae        00000000
+_TEXT                  CODE           AUTO           00000013        000005ed
+CONST                  DATA           DGROUP         00000600        00000086
+CONST2                 DATA           DGROUP         00000686        00000011
+_DATA                  DATA           DGROUP         00000698        00000000
 
 
                         +----------------+
@@ -44,12 +44,16 @@ Address        Symbol
 Module: /home/dani23/NeoOS_new/build/stage2/asm/stage2.obj(stage2.asm)
 00000000       entry
 Module: /home/dani23/NeoOS_new/build/stage2/asm/x86.obj(x86.asm)
-00000013       _x86_TTY_PutChar
+00000013       _x86_div64_32
+00000042       _x86_TTY_PutChar
 Module: /home/dani23/NeoOS_new/build/stage2/c/main.obj(/home/dani23/NeoOS_new/src/boot/stage2/main.c)
-00000026       _cstart_
+00000055       _cstart_
 Module: /home/dani23/NeoOS_new/build/stage2/c/stdio.obj(/home/dani23/NeoOS_new/src/boot/stage2/stdio.c)
-0000003b+      putc_
-00000062       puts_
+000000d2+      putc_
+000000f9+      puts_
+00000130       _printf
+0000038c+      printf_number_
+00000686+      _g_HexCharacters
 
 
                         +---------------------+
@@ -63,17 +67,17 @@ Module          Segment               Class           Address         Size
 ======          =======               =====           =======         ====
 
 stage2.asm      _ENTRY                CODE           00000000         00000013
-x86.asm         _TEXT                 CODE           00000013         00000013
+x86.asm         _TEXT                 CODE           00000013         00000042
 /home/dani23/NeoOS_new/src/boot/stage2/main.c
-                _TEXT                 CODE           00000026         00000015
-                CONST                 DATA           0000009a         00000014
-                CONST2                DATA           000000ae         00000000
-                _DATA                 DATA           000000ae         00000000
+                _TEXT                 CODE           00000055         0000007d
+                CONST                 DATA           00000600         00000086
+                CONST2                DATA           00000686         00000000
+                _DATA                 DATA           00000698         00000000
 /home/dani23/NeoOS_new/src/boot/stage2/stdio.c
-                _TEXT                 CODE           0000003b         0000005e
-                CONST                 DATA           000000ae         00000000
-                CONST2                DATA           000000ae         00000000
-                _DATA                 DATA           000000ae         00000000
+                _TEXT                 CODE           000000d2         0000052e
+                CONST                 DATA           00000686         00000000
+                CONST2                DATA           00000686         00000011
+                _DATA                 DATA           00000698         00000000
 Warning! W1014: stack segment not found
 
 
@@ -82,6 +86,6 @@ Warning! W1014: stack segment not found
                         +-----------------------+
 
 Stack size:  0200 (512.)
-Memory size:  00ae (174.)
+Memory size:  0698 (1688.)
 Entry point address: 00000000
-Link time: 00:00.67
+Link time: 00:00.03
