@@ -2,6 +2,13 @@
     "files.associations": {
         "stdint.h": "c",
         "sstream": "c",
-        "regex": "c"
+        "regex": "c",
+        "disk.h": "c",
+        "cstdlib": "c",
+        "memdefs.h": "c",
+        "fat.h": "c",
+        "*.x": "c",
+        "*.def": "c",
+        "*.inc": "c"
     }
 }
