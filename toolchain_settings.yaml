@@ -13,3 +13,6 @@ Urls:
 
 Executables:
   NASM_EXE_WIN: "nasm-NASM_VERSION-installer-x64.exe"
+
+ADVANCED:
+  JOBS: 16

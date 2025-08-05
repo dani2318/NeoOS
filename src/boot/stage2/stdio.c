@@ -23,7 +23,7 @@ void puts(const char* str){
 #define PRINTF_LENGTH_LONG              3
 #define PRINTF_LENGTH_LONG_LONG         4
 
-void _cdecl printf(const char* fmt, ...){
+void printf(const char* fmt, ...){
 
     int* argp = (int*) &fmt;
     int state = PRINTF_STATE_NORMAL;

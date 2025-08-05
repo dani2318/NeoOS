@@ -1,11 +1,4 @@
-ASM=nasm
-
-CC=toolchain/i686-elf/bin/i686-elf-gcc
-CC16=/usr/bin/watcom/binl64/wcc
-LD16=/usr/bin/watcom/binl64/wlink
-
-SRC_DIR=src
-BUILD_DIR=build
+include scripts/config.mk
 
 .PHONY: all floppy_image kernel bootloader clean always run
 

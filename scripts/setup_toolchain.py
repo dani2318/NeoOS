@@ -32,6 +32,8 @@ NASM_URL_WIN = NASM_URL_WIN.replace("NASM_VERSION",NASM_VER)
 NASM_EXE_WIN:str = toolchain_info["Executables"]["NASM_EXE_WIN"]
 NASM_EXE_WIN = NASM_EXE_WIN.replace("NASM_VERSION",NASM_VER)
 
+jobs:int = int(toolchain_info["ADVANCED"]["JOBS"])
+
 
 LIN_DIST:str = None
 
@@ -56,7 +58,6 @@ formatted_str = "Target: %s\n Binutils build path: %s \n Binutils src path: %s \
 data = (TARGET,BINUTILS_BUILD,BINUTILS_SRC,GCC_URL,GCC_VER)
 print(formatted_str % data)
 
-jobs = 4
 BINUTLIS_FILENAME = "binutils-"+BINUTILS_VER+".tar.gz"
 GCC_FILENAME = "gcc-"+GCC_VER+".tar.gz"
 
