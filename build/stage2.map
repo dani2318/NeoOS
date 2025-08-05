@@ -67,7 +67,7 @@ LOAD /mnt/e/NeoOS/toolchain/i686-elf/lib/gcc/i686-elf/15.1.0/libgcc.a
                 0x000014c8                memcpy
                 0x0000151a                memset
                 0x0000155d                memcmp
- .text          0x000015bd      0x8d9 /mnt/e/NeoOS/build/stage2/c/stdio.obj
+ .text          0x000015bd      0x8dd /mnt/e/NeoOS/build/stage2/c/stdio.obj
                 0x000015bd                putchr
                 0x000015ec                putcolor
                 0x0000161e                getchr
@@ -80,12 +80,12 @@ LOAD /mnt/e/NeoOS/toolchain/i686-elf/lib/gcc/i686-elf/15.1.0/libgcc.a
                 0x00001991                printf_unsigned
                 0x00001a35                printf_signed
                 0x00001a5e                printf
-                0x00001dfd                print_buffer
- .text          0x00001e96       0xbb /mnt/e/NeoOS/build/stage2/c/string.obj
-                0x00001e96                strchr
-                0x00001ed4                strcpy
-                0x00001f2b                strlen
- *fill*         0x00001f51        0xf 
+                0x00001e01                print_buffer
+ .text          0x00001e9a       0xbb /mnt/e/NeoOS/build/stage2/c/string.obj
+                0x00001e9a                strchr
+                0x00001ed8                strcpy
+                0x00001f2f                strlen
+ *fill*         0x00001f55        0xb 
  .text          0x00001f60      0x11a /mnt/e/NeoOS/toolchain/i686-elf/lib/gcc/i686-elf/15.1.0/libgcc.a(_udivdi3.o)
                 0x00001f60                __udivdi3
  *fill*         0x0000207a        0x6 
@@ -185,16 +185,16 @@ OUTPUT(/mnt/e/NeoOS/build/stage2.bin binary)
  .debug_aranges
                 0x00000100       0x20 /mnt/e/NeoOS/toolchain/i686-elf/lib/gcc/i686-elf/15.1.0/libgcc.a(_umoddi3.o)
 
-.debug_line     0x00000000      0xf8e
+.debug_line     0x00000000      0xf91
  .debug_line    0x00000000       0x81 /mnt/e/NeoOS/build/stage2/c/ctype.obj
  .debug_line    0x00000081      0x105 /mnt/e/NeoOS/build/stage2/c/disk.obj
  .debug_line    0x00000186      0x4e3 /mnt/e/NeoOS/build/stage2/c/fat.obj
  .debug_line    0x00000669       0xbc /mnt/e/NeoOS/build/stage2/c/main.obj
  .debug_line    0x00000725       0xd0 /mnt/e/NeoOS/build/stage2/c/memory.obj
- .debug_line    0x000007f5      0x39e /mnt/e/NeoOS/build/stage2/c/stdio.obj
- .debug_line    0x00000b93       0xb0 /mnt/e/NeoOS/build/stage2/c/string.obj
- .debug_line    0x00000c43      0x17b /mnt/e/NeoOS/toolchain/i686-elf/lib/gcc/i686-elf/15.1.0/libgcc.a(_udivdi3.o)
- .debug_line    0x00000dbe      0x1d0 /mnt/e/NeoOS/toolchain/i686-elf/lib/gcc/i686-elf/15.1.0/libgcc.a(_umoddi3.o)
+ .debug_line    0x000007f5      0x3a1 /mnt/e/NeoOS/build/stage2/c/stdio.obj
+ .debug_line    0x00000b96       0xb0 /mnt/e/NeoOS/build/stage2/c/string.obj
+ .debug_line    0x00000c46      0x17b /mnt/e/NeoOS/toolchain/i686-elf/lib/gcc/i686-elf/15.1.0/libgcc.a(_udivdi3.o)
+ .debug_line    0x00000dc1      0x1d0 /mnt/e/NeoOS/toolchain/i686-elf/lib/gcc/i686-elf/15.1.0/libgcc.a(_umoddi3.o)
 
 .debug_str      0x00000000     0x12f6
  .debug_str     0x00000000       0xea /mnt/e/NeoOS/build/stage2/c/ctype.obj
