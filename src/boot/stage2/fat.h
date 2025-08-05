@@ -1,15 +1,19 @@
 #pragma once
 
-#include "stdint.h"
+#include <stdint.h>
+#include <stddef.h>
+#include <stdbool.h>
+
+#include "string.h"
+
 #include "disk.h"
+
 #include "memdefs.h"
 #include "memory.h"
-#include "utils.h"
 #include "stdio.h"
-#include "string.h"
 #include "ctype.h"
+#include "minmax.h"
 
-#pragma pack(push, 1)
 
 typedef struct 
 {
@@ -25,10 +29,7 @@ typedef struct
     uint16_t ModifiedDate;
     uint16_t FirstClusterLow;
     uint32_t Size;
-} FAT_DirectoryEntry;
-
-#pragma pack(pop)
-
+}__attribute__((packed)) FAT_DirectoryEntry;
 
 typedef struct
 {

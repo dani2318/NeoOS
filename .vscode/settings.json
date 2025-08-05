@@ -12,6 +12,11 @@
         "*.inc": "c",
         "stdarg.h": "c",
         "stdbool.h": "c",
-        "ratio": "c"
+        "ratio": "c",
+        "random": "c",
+        "string.h": "c",
+        "ctype.h": "c",
+        "fat_test": "cpp",
+        "stdio.h": "c"
     }
 }
