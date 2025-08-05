@@ -1,5 +1,3 @@
-# Readme file for NeoOS
-
 # NeoOS
 
 NeoOS is an operating system project designed for educational and experimental purposes. This repository contains all the necessary files to build, run, and explore NeoOS.
