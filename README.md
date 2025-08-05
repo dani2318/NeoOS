@@ -4,7 +4,7 @@ NeoOS is an operating system project designed for educational and experimental p
 
 ## Prerequisites
 
-Before working with NeoOS, ensure you have Python and gcc installed on your system as it is required to set up the toolchain; and qemu to run the OS image.
+Before working with NeoOS, ensure you have Python and gcc installed on your system as it is required to set up the toolchain; and qemu to run the OS image and nasm to build the assembly part of the project.
 
 ## Setting Up the Toolchain
 
