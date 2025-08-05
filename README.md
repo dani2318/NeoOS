@@ -56,8 +56,8 @@ make run
 This will launch NeoOS in QEMU, allowing you to test and explore the operating system.
 
 ## Documentation used:
-Nanobyte: [here the link to the YT playlist](https://www.youtube.com/watch?v=9t-SPC7Tczc&list=PLFjM7v6KGMpiH2G-kT781ByCNC_0pKpPN)
-OS Dev: [link](https://wiki.osdev.org/Expanded_Main_Page)
+Nanobyte: [here the link to the YT playlist](https://www.youtube.com/watch?v=9t-SPC7Tczc&list=PLFjM7v6KGMpiH2G-kT781ByCNC_0pKpPN) <br>
+OS Dev: [link](https://wiki.osdev.org/Expanded_Main_Page) <br>
 
 ## Notes
 
