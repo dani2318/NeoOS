@@ -1,4 +1,4 @@
-bits 16
+[bits 16]
 
 section .entry
 
@@ -10,14 +10,15 @@ global entry
 
 entry:
     cli
+
+    mov [g_BootDrive], dl
+
     mov ax, ds
     mov ss, ax
-    mov sp, 0
+    mov sp, 0xFFF0
     mov bp, sp
-    sti
 
     ; switch to protected mode
-    cli
     call EnableA20
     call LoadGDT
 

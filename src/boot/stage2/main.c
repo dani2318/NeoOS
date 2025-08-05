@@ -1,16 +1,23 @@
 #include <stdint.h>
-// #include "stdio.h"
-// #include "disk.h"
+#include "stdio.h"
+#include "disk.h"
+#include "x86.h"
 // #include "fat.h"
 
+void* g_data = (void*) 0x20000;
 
 void __attribute__((cdecl)) start(uint16_t bootDrive){
+    clrscr();
+    printf("Loaded stage2 !!!\r\n");
+    DISK disk;
+    if(!DISK_Initialize(&disk, bootDrive)){
+        printf("[BOOT] Disk init error!\r\n");
+        goto end;
+    }
 
-    // DISK disk;
-    // if(!DISK_Initialize(&disk, bootDrive)){
-    //     printf("[BOOT] Disk init error!\r\n");
-    //     goto end;
-    // }
+    end:
+    for(;;);
+
 
     // if(!FAT_Initialize(&disk)){
     //     printf("[BOOT] FAT init error!\r\n");
@@ -30,6 +37,4 @@ void __attribute__((cdecl)) start(uint16_t bootDrive){
     // }
     // FAT_Close(fd);
 
-    // end:
-    //     for(;;);
 }

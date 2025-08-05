@@ -9,7 +9,7 @@ import yaml
 
 toolchain_info = None
 
-with open("toolchain_settings.yaml", 'r') as stream:
+with open("toolchain_settings.yml", 'r') as stream:
     toolchain_info = yaml.safe_load(stream)
 print("TOOLCHAIN SETTINGS:")
 print(toolchain_info)

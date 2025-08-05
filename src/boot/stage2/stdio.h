@@ -1,7 +1,9 @@
 #pragma once
-#include <stdint>
-
+#include <stdint.h>
+#include <stdbool.h>
+void setCursor(int x, int y);
+void clrscr();
 void putc(char c);
 void puts(const char* str);
 void printf(const char* fmt, ...);
-int* printf_number(int* argp, int lenght, bool sign, int radix);
+void print_buffer(const char* msg, const void* buffer, uint32_t count);

@@ -9,6 +9,9 @@
         "fat.h": "c",
         "*.x": "c",
         "*.def": "c",
-        "*.inc": "c"
+        "*.inc": "c",
+        "stdarg.h": "c",
+        "stdbool.h": "c",
+        "ratio": "c"
     }
 }
