@@ -183,6 +183,13 @@ def install_nasm():
 
     return
 
+def cleanup():
+    os.system(f"rm -ri {TOOLCHAIN_FOLDER}/binutils-{BINUTILS_VER}")
+    os.system(f"rm -ri {TOOLCHAIN_FOLDER}/build-binutils-{BINUTILS_VER}")
+    os.system(f"rm -ri {TOOLCHAIN_FOLDER}/gcc-{GCC_VER}")
+    os.system(f"rm -ri {TOOLCHAIN_FOLDER}/build-gcc-{GCC_VER}")
+    return
+
 def bootstrap_toolchain():
     if not os.path.exists(TOOLCHAIN_FOLDER):
         os.mkdir(TOOLCHAIN_FOLDER)
@@ -191,6 +198,8 @@ def bootstrap_toolchain():
     install_nasm()
     download_binutils()
     download_gcc()
+    print("Now you can delete the build folders in the toolchain folder! (do not delete \"i686-elf\")")
+    #cleanup()
 
 if __name__ == "__main__":
     if windows: exit(-1)
