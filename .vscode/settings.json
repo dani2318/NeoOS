@@ -23,6 +23,8 @@
         "ranges": "c",
         "hal.h": "c",
         "has_nothrow_constructor-2.C": "cpp",
-        "binary.h": "c"
+        "binary.h": "c",
+        "idt.h": "c",
+        "gdt.h": "c"
     }
 }

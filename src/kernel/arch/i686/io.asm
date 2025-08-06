@@ -14,3 +14,7 @@ x86_inb:
     in al, dx
     ret
 
+global i686_panic
+i686_panic:
+    cli
+    hlt
