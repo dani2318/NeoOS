@@ -15,6 +15,8 @@ typedef struct {
     IDTEntry* ptr;
 } __attribute__((packed))  IDTDescriptor;
 
+
+
 IDTEntry g_IDT[256];
 IDTDescriptor g_IDTDescriptor = {sizeof(g_IDT) - 1, g_IDT};
 

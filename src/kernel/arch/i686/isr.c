@@ -81,10 +81,8 @@ void __attribute__((cdecl)) i686_ISR_Handler(Registers* regs){
         i686_panic();
     }
 }
-
-/**
-    uint32_t    ds;
-    uint32_t    edi, esi, ebp, kern_esp, ebx, edx, ecx, eax;
-    uint32_t    interrupt, error;
-    uint32_t    eip, cs, eflags, esp, ss;
- */
+void i686_ISR_RegisterHandler(int interrupt, ISRHandler handler)
+{
+    g_ISRHandler[interrupt] = handler;
+    i686_IDT_EnableGate(interrupt);
+}

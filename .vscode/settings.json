@@ -25,6 +25,21 @@
         "has_nothrow_constructor-2.C": "cpp",
         "binary.h": "c",
         "idt.h": "c",
-        "gdt.h": "c"
+        "gdt.h": "c",
+        "pic.h": "c",
+        "cstddef": "c",
+        "string": "c",
+        "optional": "c",
+        "bit": "c",
+        "charconv": "c",
+        "format": "c",
+        "limits": "c",
+        "memory": "c",
+        "text_encoding": "c",
+        "functional": "c",
+        "compare": "c",
+        "new": "c",
+        "irq.h": "c",
+        "isr.h": "c"
     }
 }

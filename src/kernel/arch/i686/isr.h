@@ -12,4 +12,4 @@ typedef struct{
 typedef void (*ISRHandler)(Registers* regs);
 
 void i686_ISR_Initialize();
-void i686_ISR_RegisterHandler(int interrupts);
+void i686_ISR_RegisterHandler(int interrupt, ISRHandler handler);

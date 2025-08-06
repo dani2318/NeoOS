@@ -7,7 +7,7 @@ PATH = f"{MAIN_PATH}/src/kernel/arch/i686"
 
 ISRS_GEN_C = f"{PATH}/isrs_gen.c"
 ISRS_GEN_ASM = f"{PATH}/isrs_gen.inc"
-ISRS_WITH_ERROR_CODE=[8,10,11,12,13,14,17,21,29,30]
+ISRS_WITH_ERROR_CODE=[8,10,11,12,13,14,17,21,30]
 
 def generate_inc():
 
