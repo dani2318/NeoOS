@@ -1,4 +1,4 @@
-#include "idt.h"
+#include <arch/i686/interrupts/idt.h>
 #include <stdint.h>
 #include <util/binary.h>
 

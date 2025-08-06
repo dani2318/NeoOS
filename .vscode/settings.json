@@ -43,6 +43,9 @@
         "isr.h": "c",
         "i8259_.h": "c",
         "i8259.h": "c",
-        "array": "cpp"
+        "array": "cpp",
+        "cstdint": "c",
+        "buffer": "c",
+        "cpu.h": "c"
     }
 }

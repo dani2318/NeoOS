@@ -1,4 +1,4 @@
-#include "gdt.h"
+#include <arch/i686/interrupts/gdt.h>
 #include <stdint.h>
 
 typedef struct{

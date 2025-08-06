@@ -1,4 +1,4 @@
-#include "io.h"
+#include <arch/i686/io.h>
 
 #define UNUSED_PORT 0x80
 

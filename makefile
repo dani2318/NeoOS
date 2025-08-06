@@ -49,4 +49,4 @@ clean:
 	rm -rf $(BUILD_DIR)/*
 
 run:
-	qemu-system-i386 -fda build/main_floppy.img
+	qemu-system-i386 -cpu qemu32  -fda build/main_floppy.img

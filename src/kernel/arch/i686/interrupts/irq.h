@@ -1,8 +1,8 @@
 #pragma once
 
-#include "isr.h"
-#include "i8259.h"
-#include "pic.h"
+#include <arch/i686/interrupts/isr.h>
+#include <arch/i686/pic/i8259.h>
+#include <arch/i686/pic/pic.h>
 
 typedef void (*IRQHandler) (Registers* regs);
 

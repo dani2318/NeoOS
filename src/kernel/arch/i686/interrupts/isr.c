@@ -1,7 +1,7 @@
-#include "isr.h"
-#include "idt.h"
-#include "gdt.h"
-#include "io.h"
+#include <arch/i686/interrupts/isr.h>
+#include <arch/i686/interrupts/idt.h>
+#include <arch/i686/interrupts/gdt.h>
+#include <arch/i686/io.h>
 #include <stdio.h>
 #include <stddef.h>
 

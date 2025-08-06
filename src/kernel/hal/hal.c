@@ -1,8 +1,8 @@
 #include "hal.h"
-#include <arch/i686/gdt.h>
-#include <arch/i686/idt.h>
-#include <arch/i686/isr.h>
-#include <arch/i686/irq.h>
+#include <arch/i686/interrupts/gdt.h>
+#include <arch/i686/interrupts/idt.h>
+#include <arch/i686/interrupts/isr.h>
+#include <arch/i686/interrupts/irq.h>
 
 void HAL_Inizialize(){
     i686_GDT_Initialize();

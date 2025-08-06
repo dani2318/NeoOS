@@ -1,8 +1,8 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#include "i8259.h"
-#include "io.h"
+#include <arch/i686/pic/i8259.h>
+#include <arch/i686/io.h>
 
 #define PIC1_COMMAND_PORT          0x20
 #define PIC1_DATA_PORT             0x21
