@@ -40,6 +40,9 @@
         "compare": "c",
         "new": "c",
         "irq.h": "c",
-        "isr.h": "c"
+        "isr.h": "c",
+        "i8259_.h": "c",
+        "i8259.h": "c",
+        "array": "cpp"
     }
 }
