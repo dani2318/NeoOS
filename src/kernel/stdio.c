@@ -1,5 +1,5 @@
 #include "stdio.h"
-#include "x86.h"
+#include <arch/i686/io.h>
 #include <stdarg.h>
 
 const unsigned SCREEN_WIDTH = 80;
@@ -36,10 +36,10 @@ void clrscr(){
 
 void setCursor(int x, int y){
     int pos = y * SCREEN_WIDTH + x;
-    x86_outb(0x3D4, 0x0F);
-    x86_outb(0x3D5, (uint8_t)(pos & 0xFF));
-    x86_outb(0x3D4, 0x0E);
-    x86_outb(0x3D5, (uint8_t)((pos >> 8) & 0xFF));
+    i686_outb(0x3D4, 0x0F);
+    i686_outb(0x3D5, (uint8_t)(pos & 0xFF));
+    i686_outb(0x3D4, 0x0E);
+    i686_outb(0x3D5, (uint8_t)((pos >> 8) & 0xFF));
 }
 
 void scrollback(int lines){
@@ -247,6 +247,7 @@ void printf(const char* fmt, ...){
                 lenght = PRINTF_LENGTH_DEFAULT;
                 radix = 10;
                 sign = false;
+                number = false;
                 break;
         }
 
