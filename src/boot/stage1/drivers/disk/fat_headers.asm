@@ -20,3 +20,5 @@ ebr_signature:              db 29h
 ebr_volume_id:              db 12h, 34h, 56h, 78h   ; serial number, value doesn't matter
 ebr_volume_label:           db 'NEO  OS    '        ; 11 bytes, padded with spaces
 ebr_system_id:              db 'FAT12   '           ; 8 bytes
+
+times 90-($-$$)             db 0
