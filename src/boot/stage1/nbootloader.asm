@@ -131,8 +131,8 @@ extensions_dap:
     .size:              db 10h
                         db 0
     .count:             dw 0
-    .segment:           dw 0
     .offset:            dw 0
+    .segment:           dw 0
     .lba:               dq 0
 
 

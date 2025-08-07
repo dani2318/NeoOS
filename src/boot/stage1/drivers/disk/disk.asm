@@ -44,6 +44,7 @@ disk_read:
     push bx
     push cx
     push dx
+    push si
     push di
 
     cmp byte [have_extensions], 1
@@ -88,6 +89,7 @@ disk_read:
     popa                                    ; restore registers
 
     pop di
+    pop si
     pop dx
     pop cx
     pop bx

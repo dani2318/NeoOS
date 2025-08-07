@@ -49,3 +49,6 @@ clean:
 
 run:
 	qemu-system-i386 -cpu qemu32  -fda build/main_floppy.img
+
+run-disk:
+	qemu-system-i386 -cpu qemu32  -hda build/main_disk.raw
