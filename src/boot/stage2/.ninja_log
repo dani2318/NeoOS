@@ -1,0 +1,14 @@
+# ninja log v5
+3	13	0	/mnt/e/NeoOS/build/stage2.bin	7177b8dfa51a734
+4	15	0	/mnt/e/NeoOS/build/stage2.bin	7177b8dfa51a734
+4	15	0	/mnt/e/NeoOS/build/stage2.bin	7177b8dfa51a734
+4	13	0	/mnt/e/NeoOS/build/stage2.bin	7177b8dfa51a734
+34	323	1754575432463434400	/mnt/e/NeoOS/build/stage2/c/disk.obj	f2619e033a42ba37
+32	326	1754575432453183500	/mnt/e/NeoOS/build/stage2/c/ctype.obj	1d1ac0c37d9c8848
+38	327	1754575432450670000	/mnt/e/NeoOS/build/stage2/c/main.obj	b8cf2c89798cd001
+40	329	1754575432446537600	/mnt/e/NeoOS/build/stage2/c/memory.obj	eec50b92d0b3daa1
+43	330	1754575432457699300	/mnt/e/NeoOS/build/stage2/c/stdio.obj	ce4c6fcf571fd33f
+47	331	1754575432447538000	/mnt/e/NeoOS/build/stage2/c/string.obj	7efc17d8ec4ef6f8
+35	349	1754575432464432600	/mnt/e/NeoOS/build/stage2/c/fat.obj	566828977fce9b17
+26	44	1754576226845746400	/mnt/e/NeoOS/build/stage2/asm/stage2.obj	544a4079037a7fb2
+28	47	1754576226846747400	/mnt/e/NeoOS/build/stage2/asm/x86.obj	be796a4d79f9e406

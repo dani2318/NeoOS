@@ -1,0 +1,89 @@
+# Auto-generated build.ninja
+
+target_cc = /mnt/e/NeoOS/toolchain/i686-elf/bin/i686-elf-gcc
+target_asm = nasm
+target_ld = /mnt/e/NeoOS/toolchain/i686-elf/bin/i686-elf-gcc
+cflags = -std=c99 -g
+asmflags = 
+ldflags = 
+libs = 
+build_dir = /mnt/e/NeoOS/build
+src_dir = /mnt/e/NeoOS/src
+
+rule cc
+  command = mkdir -p ${bdir} && ${target_cc} ${cflags} -c -o $out $in && echo "--> Compiled: $in"
+  description = CC $in
+
+rule asm
+  command = mkdir -p ${bdir} && ${target_asm} ${asmflags} -o $out $in && echo "--> Compiled: $in"
+  description = ASM $in
+
+rule link
+  command = ${target_ld} ${ldflags} -Wl,-Map=${bdir}/kernel.map -o $out $in ${libs} && echo "--> Created kernel.bin"
+  description = LINK $out
+
+rule generate_isr
+  command = python3 ../../scripts/generate_isr.py && touch generate_isr.stamp
+  description = Generate ISR
+
+rule clean_subdir
+  command = ninja -C $dir clean
+  description = Clean subdir $dir
+
+rule build_subdir
+  command = ninja -C $dir
+  description = Build subdir $dir
+
+rule always_mkdir
+  command = mkdir -p /mnt/e/NeoOS/build
+  description = Make build dir
+
+rule clean_all
+  command = rm -rf /mnt/e/NeoOS/build/*
+  description = Clean all build files
+
+build generate_isr.stamp: generate_isr
+
+build always: always_mkdir
+
+# Build subprojects recursively
+build stage1: build_subdir
+  dir = /mnt/e/NeoOS/src/boot/stage1
+
+build stage2: build_subdir
+  dir = /mnt/e/NeoOS/src/boot/stage2
+
+build kernel_sub: build_subdir
+  dir = /mnt/e/NeoOS/src/kernel
+
+# Top-level bootloader depends on stage1 and stage2
+build bootloader: phony stage1 stage2
+
+# Kernel depends on kernel subdir
+build kernel: phony kernel_sub
+
+# Disk images depend on bootloader and kernel
+build floppy_image: phony bootloader kernel
+build hdd_image: phony bootloader kernel
+
+# Clean targets
+build clean_stage1: clean_subdir
+  dir = /mnt/e/NeoOS/build/boot/stage1
+
+build clean_stage2: clean_subdir
+  dir = /mnt/e/NeoOS/build/boot/stage2
+
+build clean_kernel: clean_subdir
+  dir = /mnt/e/NeoOS/build/kernel
+
+build clean: phony clean_stage1 clean_stage2 clean_kernel clean_all
+
+# Default build target
+default floppy_image
+
+
+subninja src/boot/stage2/build.ninja
+
+subninja src/boot/stage1/build.ninja
+
+subninja src/kernel/build.ninja
