@@ -2,7 +2,7 @@
 
 build_dir = /mnt/e/NeoOS/build
 cc = /mnt/e/NeoOS/toolchain/i686-elf/bin/i686-elf-gcc
-asm = /mnt/e/NeoOS/src/boot/stage2/x86.asm
+asm = nasm
 ld = /mnt/e/NeoOS/toolchain/i686-elf/bin/i686-elf-gcc
 cflags = -std=c99 -g -ffreestanding -nostdlib 
 asmflags =  -f elf

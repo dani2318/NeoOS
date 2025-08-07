@@ -2,3 +2,7 @@ toolchain/
 build/
 notes.txt
 p1
+
+*.log
+
+.ninja_log

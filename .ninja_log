@@ -54,3 +54,13 @@
 41	390	1754575432474614300	/mnt/e/NeoOS/build/stage2/c/disk.obj	f2619e033a42ba37
 39	57	1754576226818673400	/mnt/e/NeoOS/build/stage2/asm/stage2.obj	544a4079037a7fb2
 40	60	1754576226819787500	/mnt/e/NeoOS/build/stage2/asm/x86.obj	be796a4d79f9e406
+32	64	1754583853633995400	/mnt/e/NeoOS/build/stage2/asm/stage2.obj	544a4079037a7fb2
+37	68	1754583853634995500	/mnt/e/NeoOS/build/stage2/asm/x86.obj	be796a4d79f9e406
+49	141	1754583853711220800	/mnt/e/NeoOS/build/stage1.bin	1fa2247c6b78fbf5
+46	397	1754583853957421400	/mnt/e/NeoOS/build/stage2/c/stdio.obj	ce4c6fcf571fd33f
+39	399	1754583853951624800	/mnt/e/NeoOS/build/stage2/c/ctype.obj	1d1ac0c37d9c8848
+41	402	1754583853954910600	/mnt/e/NeoOS/build/stage2/c/disk.obj	f2619e033a42ba37
+44	403	1754583853957421400	/mnt/e/NeoOS/build/stage2/c/main.obj	b8cf2c89798cd001
+45	405	1754583853953910400	/mnt/e/NeoOS/build/stage2/c/memory.obj	eec50b92d0b3daa1
+47	407	1754583853954910600	/mnt/e/NeoOS/build/stage2/c/string.obj	7efc17d8ec4ef6f8
+42	409	1754583853964945800	/mnt/e/NeoOS/build/stage2/c/fat.obj	566828977fce9b17

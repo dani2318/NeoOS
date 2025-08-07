@@ -12,3 +12,10 @@
 35	349	1754575432464432600	/mnt/e/NeoOS/build/stage2/c/fat.obj	566828977fce9b17
 26	44	1754576226845746400	/mnt/e/NeoOS/build/stage2/asm/stage2.obj	544a4079037a7fb2
 28	47	1754576226846747400	/mnt/e/NeoOS/build/stage2/asm/x86.obj	be796a4d79f9e406
+24	362	1754583853957421400	/mnt/e/NeoOS/build/stage2/c/main.obj	b8cf2c89798cd001
+26	365	1754583853953910400	/mnt/e/NeoOS/build/stage2/c/memory.obj	eec50b92d0b3daa1
+22	367	1754583853954910600	/mnt/e/NeoOS/build/stage2/c/disk.obj	f2619e033a42ba37
+20	369	1754583853951624800	/mnt/e/NeoOS/build/stage2/c/ctype.obj	1d1ac0c37d9c8848
+27	370	1754583853957421400	/mnt/e/NeoOS/build/stage2/c/stdio.obj	ce4c6fcf571fd33f
+28	372	1754583853954910600	/mnt/e/NeoOS/build/stage2/c/string.obj	7efc17d8ec4ef6f8
+23	382	1754583853964945800	/mnt/e/NeoOS/build/stage2/c/fat.obj	566828977fce9b17

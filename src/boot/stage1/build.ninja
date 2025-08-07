@@ -3,7 +3,7 @@ build_dir = /mnt/e/NeoOS/build
 asm = nasm
 
 rule asm_bin
-  command = $asm -I src/boot/stage1 src/boot/stage1/nbootloader.asm -f bin -o $out && echo "--> Created stage1.bin"
+  command = $asm -I src/boot/stage1/stage1/mnt/e/NeoOS/src/boot/stage1/nbootloader.asm /mnt/e/NeoOS/src/boot/stage1/drivers/disk/disk.asm /mnt/e/NeoOS/src/boot/stage1/drivers/disk/fat_headers.asm /mnt/e/NeoOS/src/boot/stage1/drivers/system/print.asm -f bin -o $out && echo "--> Created stage1.bin"
   description = ASM nbootloader.asm
 
 build $build_dir/stage1.bin: asm_bin src/boot/stage1/nbootloader.asm
