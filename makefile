@@ -1,18 +1,17 @@
 include scripts/config.mk
 
-.PHONY: all floppy_image kernel bootloader clean always run
+.PHONY: all floppy_image hdd_image kernel bootloader clean always run
 
 floppy_image: $(BUILD_DIR)/main_floppy.img
 
 $(BUILD_DIR)/main_floppy.img: bootloader kernel
-	@dd if=/dev/zero of=$@ bs=512 count=2880 >/dev/null
-	@mkfs.fat -F 12 -n "NBOS" $@ >/dev/null
-	@dd if=$(BUILD_DIR)/stage1.bin of=$@ conv=notrunc >/dev/null
-	@mcopy -i $@ $(BUILD_DIR)/stage2.bin "::stage2.bin"
-	@mcopy -i $@ $(BUILD_DIR)/kernel.bin "::kernel.bin"
-	@mcopy -i $@ test.txt "::test.txt"
-	@mmd -i $@ "::mydirs"
-	@mcopy -i $@ test.txt "::mydirs/test.txt"
+	@./scripts/build_image_floppy.sh $@
+	@echo "--> Created: " $@
+
+hdd_image: $(BUILD_DIR)/main_disk.raw
+
+$(BUILD_DIR)/main_disk.raw: bootloader kernel
+	@./scripts/build_image_hdd.sh $@ $(DISK_SIZE_MAKEFILE)
 	@echo "--> Created: " $@
 #
 #	NBOOTLOADER
@@ -50,3 +49,6 @@ clean:
 
 run:
 	qemu-system-i386 -cpu qemu32  -fda build/main_floppy.img
+
+run-disk:
+	qemu-system-i386 -cpu qemu32  -hda build/main_disk.raw

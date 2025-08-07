@@ -34,18 +34,33 @@ lba_to_chs:
 ;
 ; Read sectors from a disk
 ;   Parameters:
-;       -   ax:     LBA address
+;       -   eax:    LBA address
 ;       -   cl:     number of sectors to read (up to 128)
 ;       -   dl:     drive number
 ;       -   es:bx:  memory address where to store read data
 disk_read:
 
-    push ax
+    push eax
     push bx
     push cx
     push dx
+    push si
     push di
 
+    cmp byte [have_extensions], 1
+    jne .no_disk_extensions
+
+    mov [extensions_dap.lba], eax
+    mov [extensions_dap.segment], es
+    mov [extensions_dap.offset], bx
+    mov [extensions_dap.count], cl
+
+    mov ah, 42h
+    mov si, extensions_dap
+    mov di, 3                               ; Retry counter
+    jmp .retry
+
+.no_disk_extensions:
     push cx                                 ; Save CL (number of sectors to read)
     call lba_to_chs                         ; compute CHS
     pop ax                                  ; AL = number of sector to read
@@ -74,10 +89,11 @@ disk_read:
     popa                                    ; restore registers
 
     pop di
+    pop si
     pop dx
     pop cx
     pop bx
-    pop ax
+    pop eax
     ret
 
 ;
