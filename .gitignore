@@ -2,7 +2,3 @@ toolchain/
 build/
 notes.txt
 p1
-.sconsign.dblite
-__pycache__
-
-*/*.log
