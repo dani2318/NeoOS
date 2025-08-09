@@ -15,7 +15,7 @@
 #include "minmax.h"
 
 
-typedef struct 
+typedef struct
 {
     uint8_t Name[11];
     uint8_t Attributes;
@@ -48,6 +48,13 @@ enum FAT_Attributes{
     FAT_ATTRIBUTE_DIRECTORY            = 0x10,
     FAT_ATTRIBUTE_ARCHIVE              = 0x20,
     FAT_ATTRIBUTE_LFN                  = FAT_ATTRIBUTE_READ_ONLY | FAT_ATTRIBUTE_HIDDEN | FAT_ATTRIBUTE_SYSTEM | FAT_ATTRIBUTE_VOLUME_ID,
+};
+
+enum FATType{
+    FAT12 = 12,
+    FAT16 = 16,
+    FAT32 = 32,
+    EXT2 = 0xE2,                     // 0xE2 = E(XT)2
 };
 
 bool FAT_Initialize(Partition* disk);

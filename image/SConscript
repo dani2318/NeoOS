@@ -211,7 +211,6 @@ def build_disk(image, stage1, stage2, kernel, files, env):
 
     # create partition table
     print(f"> creating partition table...")
-    print(image, file_system, partition_offset)
     create_partition_table(image, partition_offset)
 
     # create file system

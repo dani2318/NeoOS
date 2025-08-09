@@ -21,14 +21,14 @@ void __attribute__((cdecl)) start(uint16_t bootDrive,void* partition){
     printf("[BOOT] Main partiton addr. : 0x%x\n\r", partition);
     Partition part;
     MBR_DetectPartition(&part, &disk, partition);
-    
+
     if(!FAT_Initialize(&part)){
         printf("[BOOT] FAT init error!\r\n");
         goto end;
     }
 
     //Load kernel
-    FAT_File * fd = FAT_Open(&part, "/kernel.bin");
+    FAT_File * fd = FAT_Open(&part, "/boot/kernel.bin");
     uint32_t read;
     uint8_t* KernelBuffer = Kernel;
     while((read = FAT_Read(&part, fd, MEMORY_LOAD_SIZE, KernelLoadBuffer))){

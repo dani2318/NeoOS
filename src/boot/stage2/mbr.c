@@ -1,4 +1,5 @@
 #include "mbr.h"
+#include <stdio.h>
 
 typedef struct{
     uint8_t attributes;
@@ -22,5 +23,5 @@ void MBR_DetectPartition(Partition* part, DISK* disk, void* partition){
 }
 
 bool Partition_ReadSectors(Partition* part, uint32_t lba, uint8_t sectors, void * lowerDataOut){
-    DISK_ReadSectors(part->disk,lba + part->Offset, sectors, lowerDataOut);
+    return DISK_ReadSectors(part->disk,lba + part->Offset, sectors, lowerDataOut);
 }

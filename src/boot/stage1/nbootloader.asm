@@ -2,9 +2,14 @@ bits 16
 
 %define ENDL 0x0D, 0x0A
 
+%define fat12 1
+%define fat16 2
+%define fat32 3
+%define ext2  4                                     ; Unimplemented
+
 ;
 ; FAT12 header
-; 
+;
 
 section .fsjump
 
@@ -13,36 +18,50 @@ nop
 
 section .fsheaders
 
+%if (FILESYSTEM == fat12) || (FILESYSTEM == fat16) || (FILESYSTEM == fat32)
 
-bdb_oem:                    db 'MSWIN4.1'           ; 8 bytes
-bdb_bytes_per_sector:       dw 512
-bdb_sectors_per_cluster:    db 1
-bdb_reserved_sectors:       dw 1
-bdb_fat_count:              db 2
-bdb_dir_entries_count:      dw 0E0h
-bdb_total_sectors:          dw 2880                 ; 2880 * 512 = 1.44MB
-bdb_media_descriptor_type:  db 0F0h                 ; F0 = 3.5" floppy disk
-bdb_sectors_per_fat:        dw 9                    ; 9 sectors/fat
-bdb_sectors_per_track:      dw 18
-bdb_heads:                  dw 2
-bdb_hidden_sectors:         dd 0
-bdb_large_sector_count:     dd 0
+    bdb_oem:                    db 'MSWIN4.1'           ; 8 bytes
+    bdb_bytes_per_sector:       dw 512
+    bdb_sectors_per_cluster:    db 1
+    bdb_reserved_sectors:       dw 1
+    bdb_fat_count:              db 2
+    bdb_dir_entries_count:      dw 0E0h
+    bdb_total_sectors:          dw 2880                 ; 2880 * 512 = 1.44MB
+    bdb_media_descriptor_type:  db 0F0h                 ; F0 = 3.5" floppy disk
+    bdb_sectors_per_fat:        dw 9                    ; 9 sectors/fat
+    bdb_sectors_per_track:      dw 18
+    bdb_heads:                  dw 2
+    bdb_hidden_sectors:         dd 0
+    bdb_large_sector_count:     dd 0
 
-; extended boot record
-ebr_drive_number:           db 0                    ; 0x00 floppy, 0x80 hdd, useless
-                            db 0                    ; reserved
-ebr_signature:              db 29h
-ebr_volume_id:              db 12h, 34h, 56h, 78h   ; serial number, value doesn't matter
-ebr_volume_label:           db 'NEO  OS    '        ; 11 bytes, padded with spaces
-ebr_system_id:              db 'FAT12   '           ; 8 bytes
+    %if (FILESYSTEM == fat32)
 
-times 90-($-$$)             db 0
+        fat32_sectors_per_fat:                   dd 0
+        fat32_flags:                             dw 0
+        fat32_fat_version_number:                dw 0
+        fat32_rootdir_cluster:                   dd 0
+        fat32_fs_info_sector:                    dw 0
+        fat32_backup_boot_sector:                dw 0
+        fat32_reserved:                          times 12 db 0
+        
+    %endif
+
+    ; extended boot record
+    ebr_drive_number:           db 0                    ; 0x00 floppy, 0x80 hdd, useless
+                                db 0                    ; reserved
+    ebr_signature:              db 29h
+    ebr_volume_id:              db 12h, 34h, 56h, 78h   ; serial number, value doesn't matter
+    ebr_volume_label:           db 'NEO  OS    '        ; 11 bytes, padded with spaces
+    ebr_system_id:              db 'FAT12   '           ; 8 bytes
+
+
+%endif
 
 section .entry
 global start
 start:
 
-    ; move partition entry from MBR to a different location so we 
+    ; move partition entry from MBR to a different location so we
     ; don't overwrite it (which is passed through DS:SI)
     mov ax, PARTITION_ENTRY_SEGMENT
     mov es, ax
@@ -54,7 +73,7 @@ start:
     mov ax, 0           ; can't set ds/es directly
     mov ds, ax
     mov es, ax
-    
+
     ; setup stack
     mov ss, ax
     mov sp, 0x7C00              ; stack grows downwards from where we are loaded in memory
@@ -87,7 +106,7 @@ start:
 
 .no_disk_extensions:
     mov byte [have_extensions], 0
-    
+
 .after_disk_extensions_check:
     ;load stage2
     mov si, stage2_location
@@ -130,7 +149,7 @@ start:
 
     jmp STAGE2_LOAD_SEGMENT:STAGE2_LOAD_OFFSET
 
-    jmp wait_key_and_reboot             ; should never happen
+    jmp 0FFFFh:0                        ; jump to beginning of BIOS, should reboot
 
     cli                                 ; disable interrupts, this way CPU can't get out of "halt" state
     hlt
@@ -141,18 +160,7 @@ section .text
 ;
 
 floppy_error:
-    mov si, msg_read_failed
-    call puts
-    jmp wait_key_and_reboot
-
-wait_key_and_reboot:
-    mov ah, 0
-    int 16h                     ; wait for keypress
     jmp 0FFFFh:0                ; jump to beginning of BIOS, should reboot
-
-.halt:
-    cli                         ; disable interrupts, this way CPU can't get out of "halt" state
-    hlt
 
 ;
 ; Convert LBA address to CHS address
@@ -230,7 +238,7 @@ disk_read:
     int 13h                                 ; if the carry flag is cleared = success
     jnc .done
 
-    popa 
+    popa
     call disk_reset
 
     dec di
@@ -265,31 +273,7 @@ disk_reset:
     popa
     ret
 
-puts:
-    push si
-    push ax
-
-.loop:
-    lodsb
-    or al, al
-    jz .done
-
-    mov ah, 0x0e
-    int 0x10
-
-    jmp .loop
-
-.done:
-    pop ax
-    pop si
-    ret
-
-
 section .rodata
-
-    msg_loading:            db 'Loading...', ENDL, 0
-    msg_read_failed:        db 'Read from disk failed!', ENDL, 0
-    msg_stage2_not_found:   db 'STAGE2.BIN file not found!', ENDL, 0
     file_stage2_bin:        db 'STAGE2  BIN'
 
 section .data
@@ -315,4 +299,4 @@ section .data
     stage2_location:        times 30 db 0
 
 section .bss
-buffer:
+    buffer:
