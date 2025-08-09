@@ -89,15 +89,6 @@ bool FAT_Initialize(Partition* disk){
     g_Data = (FAT_Data*)MEMORY_FAT_ADDR;
 
     if (!FAT_ReadBootSector(disk)){
-        printf("partition offset: 0x%x; partition size: %d\n\r",disk->Offset, disk->Size);
-        printf("======== Drive %d info ========\r\n", disk->disk->id);
-        printf("Cylinders: %d\r\n", disk->disk->cylinders);
-        printf("Sectors: %d\r\n", disk->disk->sectors);
-        printf("Heads: %d\r\n", disk->disk->heads);
-        printf("======== Drive %d info ========\r\n",  disk->disk->id);
-        printf("BS.BootSector.BytesPerSector = %d\r\n",g_Data->BS.BootSector.BytesPerSector);
-        printf("g_Data->BS.BootSector.SectorsPerFat = %d\r\n",g_Data->BS.BootSector.SectorsPerFat);
-
 
         printf("[FAT] [FAT_ReadBootSector] Failed to read bootsector!\r\n");
         return false;
@@ -105,8 +96,8 @@ bool FAT_Initialize(Partition* disk){
 
 
     g_Fat = (uint8_t *) g_Data + sizeof(FAT_Data);
-    printf("BS.BootSector.BytesPerSector = %d\r\n",g_Data->BS.BootSector.BytesPerSector);
-    printf("g_Data->BS.BootSector.SectorsPerFat = %d\r\n",g_Data->BS.BootSector.SectorsPerFat);
+    // printf("BS.BootSector.BytesPerSector = %d\r\n",g_Data->BS.BootSector.BytesPerSector);
+    // printf("g_Data->BS.BootSector.SectorsPerFat = %d\r\n",g_Data->BS.BootSector.SectorsPerFat);
 
     uint32_t fatSize = g_Data->BS.BootSector.BytesPerSector * g_Data->BS.BootSector.SectorsPerFat;
 
