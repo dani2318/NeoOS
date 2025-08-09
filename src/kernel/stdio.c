@@ -61,7 +61,7 @@ void scrollback(int lines){
 }
 
 void putc(char c){
-    i686_outb(0xE9, c);
+
     switch (c)
     {
         case '\n':
@@ -78,7 +78,7 @@ void putc(char c){
             break;
         default:
             putchr(g_ScreenX,g_ScreenY, c);
-            g_ScreenX++;
+            g_ScreenX++;   
             break;
     }
 
@@ -174,13 +174,13 @@ void printf(const char* fmt, ...){
                 }
                 break;
             case PRINTF_STATE_LENGTH_SHORT:
-                if(*fmt == 'h'){
+                if(*fmt == 'h'){ 
                     lenght = PRINTF_LENGTH_SHORT_SHORT;
                     state  = PRINTF_STATE_SPEC;
                 }else goto PRINTF_STATE_SPEC_;
                 break;
             case PRINTF_STATE_LENGTH_LONG:
-                if(*fmt == 'l'){
+                if(*fmt == 'l'){ 
                     lenght = PRINTF_LENGTH_LONG_LONG;
                     state  = PRINTF_STATE_SPEC;
                 }else goto PRINTF_STATE_SPEC_;
@@ -259,7 +259,7 @@ void printf(const char* fmt, ...){
 void print_buffer(const char* msg, const void* buffer, uint32_t count)
 {
     const uint8_t* u8Buffer = (const uint8_t*)buffer;
-
+    
     puts(msg);
     for (uint16_t i = 0; i < count; i++)
     {

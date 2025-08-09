@@ -46,19 +46,6 @@
         "array": "cpp",
         "cstdint": "c",
         "buffer": "c",
-        "cpu.h": "c",
-        "hash_map": "c",
-        "hash_set": "c",
-        "bitset": "c",
-        "socket": "c",
-        "string_view": "c",
-        "rope": "c",
-        "slist": "c",
-        "flat_map": "c",
-        "flat_set": "c",
-        "initializer_list": "c",
-        "span": "c",
-        "stacktrace": "c",
-        "dynamic_bitset": "c"
+        "cpu.h": "c"
     }
 }
