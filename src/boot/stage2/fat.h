@@ -3,18 +3,18 @@
 #include <stdint.h>
 #include <stddef.h>
 #include <stdbool.h>
+#include <stdlib.h>
 
-#include "string.h"
+#include <string.h>
 
 #include "mbr.h"
 
 #include "memdefs.h"
 #include "memory.h"
-#include "stdio.h"
-#include "ctype.h"
+#include <stdio.h>
+#include <ctype.h>
+
 #include "minmax.h"
-
-
 typedef struct
 {
     uint8_t Name[11];
@@ -30,7 +30,6 @@ typedef struct
     uint16_t FirstClusterLow;
     uint32_t Size;
 }__attribute__((packed)) FAT_DirectoryEntry;
-
 typedef struct
 {
     int Handle;
@@ -38,7 +37,6 @@ typedef struct
     uint32_t Position;
     uint32_t Size;
 } FAT_File;
-
 
 enum FAT_Attributes{
     FAT_ATTRIBUTE_READ_ONLY            = 0x01,

@@ -10,7 +10,10 @@
 #define MEMORY_FAT_ADDR  ((void *) 0x20000)
 #define MEMORY_FAT_SIZE 0x00010000
 
-#define MEMORY_LOAD_KERNEL ((void*) 0x30000)
+#define MEMORY_ELF_ADDR ((void*) 0x30000)
+#define MEMORY_ELF_SIZE 0x00010000
+
+#define MEMORY_LOAD_KERNEL ((void*) 0x40000)
 #define MEMORY_LOAD_SIZE 0x00010000
 
 // 0x00020000 - 0x00030000 - stage 2
@@ -20,5 +23,4 @@
 // 0x00080000 - 0x0009FFFF - Extended BIOS data area
 // 0x000A0000 - 0x000C7FFF - Video
 // 0x000C8000 - 0x000FFFFF - BIOS
-
-#define MEMORY_KERNEL_ADDR ((void*) 0x100000)
+#define MEMORY_KERNEL_ADDR  ((void*)0x100000)

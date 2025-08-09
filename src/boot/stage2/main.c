@@ -3,14 +3,18 @@
 #include "disk.h"
 #include "fat.h"
 #include "mbr.h"
+#include "elf.h"
+
 
 uint8_t* KernelLoadBuffer = (uint8_t*)MEMORY_LOAD_KERNEL;
 uint8_t* Kernel = (uint8_t*)MEMORY_KERNEL_ADDR;
+
 
 typedef void (*KernelStart)();
 
 void __attribute__((cdecl)) start(uint16_t bootDrive,void* partition){
     clrscr();
+
     printf("Loaded stage2 !!!\r\n");
     DISK disk;
     if(!DISK_Initialize(&disk, bootDrive)){
@@ -28,18 +32,15 @@ void __attribute__((cdecl)) start(uint16_t bootDrive,void* partition){
     }
 
     //Load kernel
-    FAT_File * fd = FAT_Open(&part, "/boot/kernel.bin");
-    uint32_t read;
-    uint8_t* KernelBuffer = Kernel;
-    while((read = FAT_Read(&part, fd, MEMORY_LOAD_SIZE, KernelLoadBuffer))){
-        memcpy(KernelBuffer, KernelLoadBuffer, read);
-        KernelBuffer += read;
+    KernelStart kernelEntry;
+    if (!ELF_Read(&part, "/boot/kernel.elf", (void**)&kernelEntry))
+    {
+        printf("ELF read failed, booting halted!");
+        goto end;
     }
-    FAT_Close(fd);
 
-    //Kernel start
-    KernelStart kernelstart = (KernelStart)Kernel;
-    kernelstart();
+    // execute kernel
+    kernelEntry();
 
     end:
         for(;;);

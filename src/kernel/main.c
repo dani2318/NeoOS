@@ -7,15 +7,15 @@
 #include "stdio.h"
 #include "memory.h"
 
+extern void _init();
+
 void timer(Registers* regs){
 }
 
-extern uint8_t __bss_start;
-extern uint8_t __end;
 
-void __attribute__((section(".entry"))) start(uint16_t bootDrive){
-
-    memset(&__bss_start, 0, (&__end) - (&__bss_start));
+void start(uint16_t bootDrive){
+    // call global constructors
+    _init();
 
     clrscr();
     printf("Loaded Kernel !!!\r\n");
