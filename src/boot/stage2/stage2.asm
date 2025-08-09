@@ -4,7 +4,7 @@ section .entry
 
 extern __bss_start
 extern __end
-
+extern _init
 extern start
 global entry
 
@@ -12,6 +12,8 @@ entry:
     cli
 
     mov [g_BootDrive], dl
+    mov [g_BootPartitionOff], si
+    mov [g_BootPartitionSeg], di
 
     mov ax, ds
     mov ss, ax
@@ -52,6 +54,15 @@ entry:
     mov al, 0
     cld
     rep stosb
+
+    ; call global constructors
+    call _init
+
+    ; expect boot drive in dl, send it as argument to cstart function
+    mov dx, [g_BootPartitionSeg]
+    shl edx, 16
+    mov dx, [g_BootPartitionOff]
+    push edx
 
     ; expect boot drive in dl, send it as argument to cstart function
     xor edx, edx
@@ -171,3 +182,6 @@ g_GDTDesc:  dw g_GDTDesc - g_GDT - 1    ; limit = size of GDT
             dd g_GDT                    ; address of GDT
 
 g_BootDrive: db 0
+
+g_BootPartitionSeg: dw 0
+g_BootPartitionOff: dw 0
