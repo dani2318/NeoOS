@@ -154,6 +154,8 @@ Export('TARGET_ENVIRONMENT')
 variantDir = 'build/{0}_{1}'.format(TARGET_ENVIRONMENT['arch'], TARGET_ENVIRONMENT['config'])
 variantDirStage1 = variantDir + '/stage1_{0}'.format(TARGET_ENVIRONMENT['imageFS'])
 
+SConscript('src/libs/core/SConscript', variant_dir=variantDir + '/libscore', duplicate=0)
+
 SConscript('src/boot/stage1/SConscript', variant_dir=variantDirStage1, duplicate=0)
 SConscript('src/boot/stage2/SConscript', variant_dir=variantDir + '/stage2', duplicate=0)
 SConscript('src/kernel/SConscript', variant_dir=variantDir + '/kernel', duplicate=0)
@@ -166,6 +168,8 @@ Default(image)
 # Phony targets
 PhonyTargets(HOST_ENVIRONMENT, 
              run=['./scripts/run.sh', HOST_ENVIRONMENT['imageType'], image[0].path],
+             debug=['./scripts/debug.sh', HOST_ENVIRONMENT['imageType'], image[0].path],
+             bochs=['./scripts/bochs.sh', HOST_ENVIRONMENT['imageType'], image[0].path],
              toolchain=['python3 ./scripts/setup_toolchain.py'])
 
 Depends('run', image)

@@ -22,6 +22,12 @@
         "elf.h": "c",
         "memdefs.h": "c",
         "*.x": "c",
-        "xlocmon": "c"
+        "xlocmon": "c",
+        "stdbool.h": "c",
+        "irq.h": "c",
+        "cpu.h": "c",
+        "e9.h": "c",
+        "vga_text.h": "c",
+        "debug.h": "c"
     }
 }
