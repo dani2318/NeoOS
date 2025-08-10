@@ -3,16 +3,16 @@
 template <typename T>
 constexpr bool IsSigned();
 
-template <char> constexpr bool IsSigned() { return true; };
-template <short> constexpr bool IsSigned() { return true; };
-template <int> constexpr bool IsSigned() { return true; };
-template <long> constexpr bool IsSigned() { return true; };
-template <long long> constexpr bool IsSigned() { return true; };
-template <unsigned char> constexpr bool IsSigned() { return false; };
-template <unsigned short> constexpr bool IsSigned() { return false; };
-template <unsigned int> constexpr bool IsSigned() { return false; };
-template <unsigned long> constexpr bool IsSigned() { return false; };
-template <unsigned long long> constexpr bool IsSigned() { return false; };
+template <> constexpr bool IsSigned<char>()               { return true; };
+template <> constexpr bool IsSigned<short>()              { return true; };
+template <> constexpr bool IsSigned<int>()                { return true; };
+template <> constexpr bool IsSigned<long>()               { return true; };
+template <> constexpr bool IsSigned<long long>()          { return true; };
+template <> constexpr bool IsSigned<unsigned char>()      { return false; };
+template <> constexpr bool IsSigned<unsigned short>()     { return false; };
+template <> constexpr bool IsSigned<unsigned int>()       { return false; };
+template <> constexpr bool IsSigned<unsigned long>()      { return false; };
+template <> constexpr bool IsSigned<unsigned long long>() { return false; };
 
 
 template<typename T>
