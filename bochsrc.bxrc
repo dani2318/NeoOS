@@ -1,0 +1,10 @@
+megs: 128
+romimage: file="D:\Program Files\Bochs-3.0\BIOS-bochs-latest"
+vgaromimage: file="D:\Program Files\Bochs-3.0\VGABIOS-lgpl-latest.bin"
+mouse: enabled=0
+display_library: win32, options="gui_debug"
+ata0-master: type=disk, path="build\i686_debug\image.img", cylinders=1024, heads=4, spt=32
+boot: disk
+port_e9_hack: enabled=1
+
+info: action=ignore
