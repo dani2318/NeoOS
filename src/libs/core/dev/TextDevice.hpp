@@ -3,21 +3,6 @@
 #include <cpp/TypeTraits.hpp>
 #include <stdarg.h>
 
-enum class FormatState {
-    Normal       = 0,
-    Length       = 1,
-    LengthShort  = 2,
-    LengthLong   = 3,
-    Spec         = 4,
-};
-
-enum class FormatLength {
-    Default       = 0,
-    ShortShort    = 1,
-    Short         = 2,
-    Long          = 3,
-    LongLong      = 4,
-};
 
 class TextDevice{
     public:

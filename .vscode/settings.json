@@ -37,6 +37,23 @@
         "memory": "cpp",
         "ranges": "cpp",
         "xutility": "cpp",
-        "limits": "cpp"
+        "limits": "cpp",
+        "chrono": "cpp",
+        "algorithm": "c",
+        "deque": "c",
+        "functional": "c",
+        "complex": "c",
+        "expected": "c",
+        "optional": "c",
+        "system_error": "c",
+        "type_traits": "c",
+        "xtr1common": "c",
+        "*.in": "c",
+        "charconv": "c",
+        "format": "c",
+        "ratio": "c",
+        "array": "c",
+        "tuple": "c",
+        "utility": "c"
     }
 }
