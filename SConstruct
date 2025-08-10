@@ -77,7 +77,7 @@ HOST_ENVIRONMENT = Environment(
     ENV=os.environ,
     AS='nasm',
     CFLAGS=['-std=c99'],
-    CXXFLAGS=["-std=c++20"],
+    CXXFLAGS=["-std=c++17"],
     CCFLAGS=['-g'],
     STRIP='strip',
     toolchain='toolchain/'
