@@ -28,6 +28,15 @@
         "cpu.h": "c",
         "e9.h": "c",
         "vga_text.h": "c",
-        "debug.h": "c"
+        "debug.h": "c",
+        "queue": "cpp",
+        "stack": "cpp",
+        "random": "cpp",
+        "io.h": "c",
+        "iterator": "cpp",
+        "memory": "cpp",
+        "ranges": "cpp",
+        "xutility": "cpp",
+        "limits": "cpp"
     }
 }
