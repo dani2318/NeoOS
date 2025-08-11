@@ -55,5 +55,6 @@
         "array": "c",
         "tuple": "c",
         "utility": "c"
-    }
+    },
+    "C_Cpp.default.configurationProvider": "mesonbuild.mesonbuild"
 }

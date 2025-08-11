@@ -1,0 +1,53 @@
+# Cross-compilation file for NeoOS i686 target
+# =============================================
+# 
+# Usage: meson setup build --cross-file i686-elf.cross
+#
+# This file defines the cross-compilation environment for building NeoOS
+# for the i686 architecture using either a dedicated i686-elf toolchain
+# or regular GCC with appropriate flags.
+
+[binaries]
+# Option 1: Dedicated i686-elf cross-compiler (recommended)
+# Download from: https://github.com/lordmilko/i686-elf-tools
+c = 'i686-elf-gcc'
+cpp = 'i686-elf-g++'
+ar = 'i686-elf-ar'
+ld = 'i686-elf-ld'
+objcopy = 'i686-elf-objcopy'
+strip = 'i686-elf-strip'
+size = 'i686-elf-size'
+nm = 'i686-elf-nm'
+objdump = 'i686-elf-objdump'
+
+# Option 2: Regular GCC (uncomment if you don't have i686-elf-gcc)
+# c = 'gcc'
+# cpp = 'g++'
+# ar = 'ar'
+# ld = 'ld'
+# objcopy = 'objcopy'
+# strip = 'strip'
+# size = 'size'
+# nm = 'nm'
+# objdump = 'objdump'
+
+# Common tools (same regardless of toolchain)
+nasm = 'nasm'
+python3 = 'python3'
+
+# Optional tools for development
+qemu = 'qemu-system-i386'
+gdb = 'gdb'
+
+[properties]
+# Set this to false since we're cross-compiling
+needs_exe_wrapper = false
+
+# Skip compiler sanity checks (they won't work for freestanding targets)
+skip_sanity_check = true
+
+[host_machine]
+system = 'none'        # Freestanding/bare metal
+cpu_family = 'x86'     # x86 architecture family
+cpu = 'i686'           # Specific CPU target
+endian = 'little'      # x86 is little-endian
