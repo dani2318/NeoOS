@@ -13,10 +13,10 @@ project('NeoOS', 'c', 'cpp',
     version: '0.1.0',
     license: 'AGPL-3.0 license',
     default_options: [
-        'c_std=gnu11',
+        'c_std=c99',
         'cpp_std=c++17',
         'warning_level=2',
-        'buildtype=' + get_option('config'),
+        'buildtype=debug',
         'default_library=static',
     ]
 )
@@ -25,8 +25,6 @@ meson_version = meson.version()
 if meson_version.version_compare('<0.50.0')
     error('Meson version 0.50.0 or newer is required, found: ' + meson_version)
 endif
-
-
 
 # Display build configuration
 message('Building NeoOS version: ' + meson.project_version())
@@ -40,8 +38,25 @@ cxx = meson.get_compiler('cpp')
 # Find required tools
 python3 = find_program('python3', required: true)
 nasm = find_program('nasm', required: true)
-objcopy = find_program('objcopy', required: true)
-strip_prog = find_program('strip', required: true)
+
+# Try to find objcopy and strip from toolchain first, then system
+toolchain_base = meson.project_source_root() / 'toolchain' / 'i686-elf' / 'bin'
+
+objcopy = find_program(
+    toolchain_base / 'i686-elf-objcopy.exe',
+    toolchain_base / 'i686-elf-objcopy', 
+    'i686-elf-objcopy',
+    'objcopy',
+    required: true
+)
+
+strip_prog = find_program(
+    toolchain_base / 'i686-elf-strip.exe',
+    toolchain_base / 'i686-elf-strip',
+    'i686-elf-strip', 
+    'strip',
+    required: true
+)
 
 # Optional tools for running/debugging
 qemu = find_program('qemu-system-i386', required: false)
@@ -50,6 +65,9 @@ gdb = find_program('gdb', required: false)
 if not qemu.found()
     warning('QEMU not found - run target will not work')
 endif
+
+message('Using objcopy: ' + objcopy.full_path())
+message('Using strip: ' + strip_prog.full_path())
 
 # === Compiler Flags ===
 base_cflags = [
@@ -139,7 +157,7 @@ endif
 # Create the bootable disk image
 neoos_image = custom_target(
     'NeoOS.img',
-    input: [kernel_elf, stage1_bin, stage2_bin],
+    input: [kernel_elf, stage1_elf, stage2_bin],
     output: 'NeoOS.img',
     command: [
         python3, create_image_script,

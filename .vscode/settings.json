@@ -56,5 +56,6 @@
         "tuple": "c",
         "utility": "c"
     },
-    "C_Cpp.default.configurationProvider": "mesonbuild.mesonbuild"
+    "C_Cpp.default.configurationProvider": "mesonbuild.mesonbuild",
+    "C_Cpp.default.compileCommands": "e:\\NeoOS\\builddir/compile_commands.json"
 }

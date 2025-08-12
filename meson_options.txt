@@ -2,12 +2,8 @@
 # ==================================
 
 # Build configuration (debug/release)
-option('config', 
-    type: 'combo', 
-    choices: ['debug', 'release'], 
-    value: 'debug',
-    description: 'Build configuration - debug includes symbols and less optimization'
-)
+option('config', type : 'combo', choices: ['debug', 'release'], value : 'debug', description : 'Build configuration - debug includes symbols and less optimization')
+
 
 # Disk image type
 option('imageType', 

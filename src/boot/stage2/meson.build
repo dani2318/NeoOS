@@ -8,11 +8,36 @@ message('Building stage2 bootloader...')
 stage2_dir = meson.current_source_dir()
 fs = import('fs')
 
+# Define toolchain paths for stage2
+toolchain_dir = join_paths(meson.project_source_root(), 'toolchain', 'i686-elf', 'bin')
+gcc_path = join_paths(toolchain_dir, 'i686-elf-gcc.exe')
+gxx_path = join_paths(toolchain_dir, 'i686-elf-g++.exe')
+objcopy_path = join_paths(toolchain_dir, 'i686-elf-objcopy.exe')
+
+# Verify toolchain exists
+if not fs.exists(gcc_path)
+  error('Toolchain GCC not found at: ' + gcc_path)
+endif
+
+glob_cmd_c = ['python3', '-c',
+'''
+import glob
+import sys
+import json
+
+path = sys.argv[1]
+files = glob.glob(path + '/*.c')
+print(json.dumps(files))
+''',
+stage2_dir]
+
+result = run_command(glob_cmd_c)
+file_list = result.stdout().strip().replace('"', '').replace('[', '').replace(']', '').replace(',', ' ').split()
+
 # === Auto-discover C source files ===
 stage2_c_sources = []
-foreach file : fs.glob(stage2_dir, '*.c')
-    stage2_c_sources += files(file)
-endforeach
+stage2_c_sources = files(file_list)
+
 
 message('Found @0@ C source files for stage2'.format(stage2_c_sources.length()))
 
@@ -21,14 +46,32 @@ if stage2_c_sources.length() == 0
     error('No C source files found in stage2 directory')
 endif
 
+glob_cmd_asm = ['python3', '-c',
+'''
+import glob
+import sys
+import json
+
+path = sys.argv[1]
+files = glob.glob(path + '/*.asm')
+print(json.dumps(files))
+''',
+stage2_dir]
+
+result = run_command(glob_cmd_asm)
+file_list_asm = result.stdout().strip().replace('"', '').replace('[', '').replace(']', '').replace(',', ' ').split()
+stage2_asm_sources = []
+
+foreach file : file_list_asm
+  filename = file
+  if filename != 'crti.asm' and filename != 'crtn.asm'
+    stage2_asm_sources += files(file)
+  endif
+endforeach
+
 # === Auto-discover assembly sources (excluding CRT files) ===
 stage2_asm_sources = []
-foreach file : fs.glob(stage2_dir, '*.asm')
-    # Skip CRT files - they need special handling
-    if not (file.contains('crti.asm') or file.contains('crtn.asm'))
-        stage2_asm_sources += files(file)
-    endif
-endforeach
+stage2_asm_sources = files(file_list_asm)
 
 message('Found @0@ assembly source files for stage2'.format(stage2_asm_sources.length()))
 
@@ -37,10 +80,10 @@ crti_asm = files('crti.asm')[0]
 crtn_asm = files('crtn.asm')[0]
 
 # Verify CRT files exist
-if not fs.exists(crti_asm)
+if not fs.exists(crti_asm.full_path())
     error('crti.asm not found in stage2 directory')
 endif
-if not fs.exists(crtn_asm)
+if not fs.exists(crtn_asm.full_path())
     error('crtn.asm not found in stage2 directory')
 endif
 
@@ -110,8 +153,8 @@ if gcc_libdir_result.returncode() == 0
     libgcc_file = gcc_libdir_result.stdout().strip()
     libgcc_dir = fs.parent(libgcc_file)
     
-    potential_crtbegin = libgcc_dir / 'crtbegin.o'
-    potential_crtend = libgcc_dir / 'crtend.o'
+    potential_crtbegin = join_paths(libgcc_dir, 'crtbegin.o')
+    potential_crtend = join_paths(libgcc_dir, 'crtend.o')
     
     if fs.exists(potential_crtbegin) and fs.exists(potential_crtend)
         crtbegin_obj = potential_crtbegin
@@ -124,7 +167,7 @@ endif
 if crtbegin_obj == ''
     message('Searching for libgcc CRT objects for stage2...')
     
-    find_libgcc_script = '''
+find_libgcc_script = '''
 import subprocess
 import os
 import glob
@@ -132,7 +175,7 @@ import glob
 def find_crt_objects():
     try:
         # Ask GCC for libgcc location
-        result = subprocess.run([@0@, '-m32', '--print-libgcc-file-name'], 
+        result = subprocess.run([{compiler}, '-m32', '--print-libgcc-file-name'], 
                               capture_output=True, text=True, check=True)
         libgcc_file = result.stdout.strip()
         libgcc_dir = os.path.dirname(libgcc_file)
@@ -172,7 +215,15 @@ def find_crt_objects():
 
 if __name__ == "__main__":
     find_crt_objects()
-    '''.format("'" + (cc.get_id() == 'gcc' ? cc.cmd_array()[0] : 'gcc') + "'")
+'''
+
+compiler_cmd = cc.cmd_array()[0]
+if cc.get_id() != 'i686-elf-gcc'
+  compiler_cmd = 'i686-elf-gcc'
+endif
+
+find_libgcc_script = find_libgcc_script.format(compiler_cmd)
+
     
     libgcc_result = run_command(
         python3, '-c', find_libgcc_script,
@@ -206,7 +257,7 @@ else
 endif
 
 # === Linker Configuration ===
-stage2_linker_script = stage2_dir / 'linker.ld'
+stage2_linker_script = join_paths(stage2_dir, 'linker.ld')
 
 # Verify linker script exists
 if not fs.exists(stage2_linker_script)
@@ -216,16 +267,29 @@ endif
 stage2_link_args = [
     '-T', stage2_linker_script,
     '-Map', meson.current_build_dir() / 'stage2.map',
-    '-nostdlib',
-    '-static',
-    '--gc-sections',  # Remove unused sections
+    '-nostdlib',         # Don't link standard libraries
+    '-nostartfiles',     # Don't use standard startup files  
+    '-nodefaultlibs',    # Don't use default libraries
+    '-ffreestanding',    # Freestanding environment
+    '-static',           # Static linking
+    '-m32',              # Target 32-bit
+    '-Wl,--no-dynamic-linker',
+    '-Wl,--build-id=none',  # Don't add build ID (cleaner binary)
 ]
 
+
 # === Stage2-specific Compile Flags ===
-stage2_c_args = cflags + [
+stage2_c_args = [
+    '-ffreestanding',    # Freestanding environment - no hosted environment
+    '-nostdlib',         # Don't link standard libraries
+    '-nostartfiles',     # Don't use standard startup files
+    '-nodefaultlibs',    # Don't use default libraries
+    '-fno-builtin',      # Don't use builtin functions
+    '-fno-stack-protector', # Disable stack protection (no runtime support)
     '-fno-pie',          # Disable position independent executable
     '-static',           # Static linking
-]
+    '-m32',              # Target 32-bit
+] + cflags
 
 # === Build Stage2 ELF with Proper CRT Ordering ===
 # Correct linking order: crti.o -> crtbegin.o -> objects -> libraries -> crtend.o -> crtn.o
@@ -235,13 +299,19 @@ stage2_objects_and_libs = stage2_asm_objects
 # Build the stage2 executable with proper CRT ordering
 stage2_elf_sources = stage2_c_sources + stage2_objects_and_libs
 
+# Use project source root instead of build root to stay within E: drive
+toolchain_base_dir = meson.project_source_root()
+toolchain_include_dir = join_paths(toolchain_base_dir, 'toolchain', 'i686-elf', 'lib', 'gcc', 'i686-elf', '15.1.0', 'include')
+ld_path = join_paths(toolchain_base_dir, 'toolchain','i686-elf', 'bin','i686-elf-gcc')
+
 stage2_elf = executable(
     'stage2.elf',
     stage2_elf_sources,
     objects: [crti_obj] + (crtbegin_obj != '' ? [crtbegin_obj] : []) + 
              (crtend_obj != '' ? [crtend_obj] : []) + [crtn_obj],
-    c_args: stage2_c_args,
     link_args: stage2_link_args,
+    c_args: stage2_c_args + ['-I' + toolchain_include_dir, '-I.'],
+    cpp_args: stage2_c_args + ['-I' + toolchain_include_dir, '-I.', '-fno-exceptions', '-fno-rtti'],
     dependencies: [libcore_dep],
     install: false,
     native: false,  # This is a cross-compiled target
@@ -253,53 +323,12 @@ stage2_bin = custom_target(
     input: stage2_elf,
     output: 'stage2.bin',
     command: [
-        objcopy,
-        '-O', 'binary',
+        ld_path,  # Use toolchain objcopy
+        '-T', 'linker.ld',
+        '-o','@OUTPUT@',
+        '-O','binary',
         '@INPUT@',
-        '@OUTPUT@'
     ],
     install: false,
     build_by_default: true,
 )
-
-# === Optional: Create Disassembly ===
-if get_option('config') == 'debug'
-    objdump = find_program('objdump', required: false)
-    if objdump.found()
-        stage2_disasm = custom_target(
-            'stage2.dis',
-            input: stage2_elf,
-            output: 'stage2.dis',
-            command: [
-                objdump,
-                '-d', '-S',
-                '@INPUT@'
-            ],
-            capture: true,
-            install: false,
-        )
-    endif
-endif
-
-# === Size Information ===
-stage2_size_info = custom_target(
-    'stage2_size_info',
-    input: stage2_bin,
-    output: 'stage2_size.txt',
-    command: [
-        python3, '-c',
-        '''
-import sys, os
-size = os.path.getsize(sys.argv[1])
-print(f"Stage2 bootloader size: {size} bytes ({size/1024:.1f} KB)")
-with open(sys.argv[2], 'w') as f:
-    f.write(f"Stage2 size: {size} bytes\\n")
-    ''',
-        '@INPUT@', '@OUTPUT@'
-    ],
-    depends: [stage2_bin],
-    console: true,
-    build_by_default: true,
-)
-
-message('Stage2 bootloader build configured successfully')
