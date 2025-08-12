@@ -11,12 +11,12 @@ export LINKFLAGS =
 export LIBS =
 current_dir = $(shell pwd)
 export TARGET = i686-elf
-export TARGET_ASM = nasm
+export TARGET_ASM = nasm.exe
 export TARGET_ASMFLAGS =
 export TARGET_CFLAGS = -std=c99 -g #-O2
-export TARGET_CC = $(current_dir)/toolchain/i686-elf/bin/i686-elf-gcc
-export TARGET_CXX = $(current_dir)/toolchain/i686-elf/bin/i686-elf-g++
-export TARGET_LD = $(current_dir)/toolchain/i686-elf/bin/i686-elf-gcc
+export TARGET_CC = $(current_dir)/toolchain/i686-elf/bin/i686-elf-gcc.exe
+export TARGET_CXX = $(current_dir)/toolchain/i686-elf/bin/i686-elf-g++.exe
+export TARGET_LD = $(current_dir)/toolchain/i686-elf/bin/i686-elf-gcc.exe
 export TARGET_LINKFLAGS =
 export TARGET_LIBS =
 

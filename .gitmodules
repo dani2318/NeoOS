@@ -1,0 +1,3 @@
+[submodule "NeoOS_BuildSystem"]
+	path = NeoOS_BuildSystem
+	url = https://github.com/dani2318/NeoOS_BuildSystem

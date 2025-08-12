@@ -18,7 +18,7 @@
 
 extern i686_ISR_Handler
 
-%include "isrs_gen.inc"
+%include "arch/i686/isrs_gen.inc"
 
 isr_common:
     pusha               ; pushes all registers
