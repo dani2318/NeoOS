@@ -98,11 +98,17 @@ kernel_link_args = [
     '-T', kernel_linker_script,
     '-Map', meson.current_build_dir() / 'kernel.map',
     '-nostdlib',
+    '-nodefaultlibs',
+    '-fno-builtin',
+    '-ffreestanding',
     '-static',
 ]
 
 kernel_c_args = [
     '-fno-pie',
+    '-ffreestanding',
+    '-nodefaultlibs',
+    '-fno-builtin',
     '-static',
     '-mno-red-zone',
 ]
@@ -132,8 +138,8 @@ kernel_elf = custom_target(
         strip_prog,
         '--strip-debug',
         '--strip-unneeded',
-        '-o', '@OUTPUT@',
         '@INPUT@',
+        '-o', '@OUTPUT@',
     ],
     install: false,
 )
