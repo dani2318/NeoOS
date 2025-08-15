@@ -83,6 +83,10 @@ HOST_ENVIRONMENT = Environment(
     toolchain='toolchain/'
 )
 
+HOST_ENVIRONMENT.Append(
+    ROOTDIR = HOST_ENVIRONMENT.Dir('.').srcnode()
+)
+
 if HOST_ENVIRONMENT['config'] == 'debug':
     HOST_ENVIRONMENT.Append(CCFLAGS= ['-O0'])
 else:
@@ -125,6 +129,7 @@ TARGET_ENVIRONMENT = HOST_ENVIRONMENT.Clone(
     TOOLCHAIN_PREFIX=str(toolchainDir),
     TOOLCHAIN_LIBGCC=str(toolchainGCCLibs),
 )
+
 
 TARGET_ENVIRONMENT.Append(
     ASFLAGS = [

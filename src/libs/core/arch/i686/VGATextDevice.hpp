@@ -1,11 +1,13 @@
 #pragma once
-#include <dev/BlockDevice.hpp>
+#include <core/dev/CharacterDevice.hpp>
+#include <core/arch/i686/IO.hpp>
 
 
 namespace arch{
     namespace i686{
-        class VGATextDevice : public BlockDevice {
+        class VGATextDevice : public CharacterDevice {
             public:
+                VGATextDevice();
                 virtual size_t Write(const uint8_t* data, size_t size); 
                 virtual size_t Read(uint8_t* data, size_t size); 
                 void Clear();

@@ -1,8 +1,7 @@
 #pragma once
-#include <dev/CharacterDevice.hpp>
-#include <cpp/TypeTraits.hpp>
 #include <stdarg.h>
-
+#include <core/dev/CharacterDevice.hpp>
+#include <core/cpp/TypeTraits.hpp>
 
 class TextDevice{
     public:
@@ -48,7 +47,7 @@ bool TextDevice::Write(TNumber number, int base) {
 
     // print number in reverse order
     while (--pos >= 0)
-        Write(buffer[pos], base);
+        ok = ok && Write(buffer[pos], base);
 
     return ok;
 }

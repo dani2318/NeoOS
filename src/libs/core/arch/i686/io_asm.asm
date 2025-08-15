@@ -1,4 +1,4 @@
-global outb
+global Outb
 Outb:
     [bits 32]
     mov dx, [esp + 4]
@@ -6,7 +6,7 @@ Outb:
     out dx, al
     ret
 
-global inb
+global Inb
 Inb:
     [bits 32]
     mov dx, [esp + 4]
@@ -14,7 +14,7 @@ Inb:
     in al, dx
     ret
 
-global outl
+global Outl
 Outl:
     ; Stack layout (cdecl):
     ; [esp + 4] = port (uint16_t)
@@ -25,7 +25,7 @@ Outl:
     out dx, eax          ; output long (32 bit)
     ret
 
-global inl
+global Inl
 Inl:
     [bits 32]
     mov dx, [esp + 4]
@@ -33,17 +33,17 @@ Inl:
     in eax, dx
     ret
 
-global cli ; Disable Interrupts
+global Cli ; Disable Interrupts
 Cli:
     cli
     ret
 
-global sti ; Enable Interrupts
+global Sti ; Enable Interrupts
 Sti:
     sti
     ret
 
-global panic
+global Panic
 Panic:
     cli
     hlt

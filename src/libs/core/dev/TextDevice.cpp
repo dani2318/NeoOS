@@ -1,19 +1,16 @@
-#include <dev/TextDevice.hpp>
+#include "TextDevice.hpp"
 
-TextDevice::TextDevice(CharacterDevice* dev)
-    : m_dev(dev){
-    
-}
-
-enum class FormatState {
-    Normal       = 0,
-    Length       = 1,
-    LengthShort  = 2,
-    LengthLong   = 3,
-    Spec         = 4,
+enum class FormatState 
+{
+    Normal = 0,
+    Length = 1,
+    LengthShort = 2,
+    LengthLong = 3,
+    Spec = 4,
 };
 
-enum class FormatLength {
+enum class FormatLength 
+{
     Default       = 0,
     ShortShort    = 1,
     Short         = 2,
@@ -21,24 +18,33 @@ enum class FormatLength {
     LongLong      = 4,
 };
 
-
 const char TextDevice::g_HexChars[] = "0123456789abcdef";
 
-bool TextDevice::Write(char c){
-   return m_dev->Write(reinterpret_cast<const uint8_t*>(&c),sizeof(c)) == sizeof(c);
+TextDevice::TextDevice(CharacterDevice* dev)
+    : m_dev(dev)
+{
 }
 
-bool TextDevice::Write(const char* str){
+bool TextDevice::Write(char c)
+{
+    return m_dev->Write(reinterpret_cast<const uint8_t*>(&c), sizeof(c)) == sizeof(c);
+}
+
+bool TextDevice::Write(const char* str)
+{
     bool ok = true;
-    while(*str)
+
+    while(*str && ok)
     {
         ok = ok && Write(*str);
         str++;
     }
+
     return ok;
 }
 
-bool TextDevice::VFormat(const char* fmt, va_list args){
+bool TextDevice::VFormat(const char* fmt, va_list args)
+{
     FormatState state = FormatState::Normal;
     FormatLength length = FormatLength::Default;
     int radix = 10;
@@ -69,7 +75,7 @@ bool TextDevice::VFormat(const char* fmt, va_list args){
                     case 'l':   length = FormatLength::Long;
                                 state = FormatState::LengthLong;
                                 break;
-                    default:    goto FormatState_SPEC;
+                    default:    goto FormatState_Spec;
                 }
                 break;
 
@@ -79,7 +85,7 @@ bool TextDevice::VFormat(const char* fmt, va_list args){
                     length = FormatLength::ShortShort;
                     state = FormatState::Spec;
                 }
-                else goto FormatState_SPEC;
+                else goto FormatState_Spec;
                 break;
 
             case FormatState::LengthLong:
@@ -88,11 +94,11 @@ bool TextDevice::VFormat(const char* fmt, va_list args){
                     length = FormatLength::LongLong;
                     state = FormatState::Spec;
                 }
-                else goto FormatState_SPEC;
+                else goto FormatState_Spec;
                 break;
 
             case FormatState::Spec:
-            FormatState_SPEC:
+            FormatState_Spec:
                 switch (*fmt)
                 {
                     case 'c':   ok = ok && Write((char)va_arg(args, int));
@@ -130,32 +136,32 @@ bool TextDevice::VFormat(const char* fmt, va_list args){
                     {
                         switch (length)
                         {
-                            case FormatLength::ShortShort:
-                            case FormatLength::Short:
-                            case FormatLength::Default:     ok = ok && Write(va_arg(args, int), radix);
-                                                            break;
+                        case FormatLength::ShortShort:
+                        case FormatLength::Short:
+                        case FormatLength::Default:     ok = ok && Write(va_arg(args, int), radix);
+                                                        break;
 
-                            case FormatLength::Long:        ok = ok && Write(va_arg(args, long), radix);
-                                                            break;
+                        case FormatLength::Long:        ok = ok && Write(va_arg(args, long), radix);
+                                                        break;
 
-                            case FormatLength::LongLong:    ok = ok && Write(va_arg(args, long long), radix);
-                                                            break;
+                        case FormatLength::LongLong:    ok = ok && Write(va_arg(args, long long), radix);
+                                                        break;
                         }
                     }
                     else
                     {
                         switch (length)
                         {
-                            case FormatLength::ShortShort:
-                            case FormatLength::Short:
-                            case FormatLength::Default:     ok = ok && Write(va_arg(args, unsigned int), radix);
-                                                            break;
-                                                            
-                            case FormatLength::Long:        ok = ok && Write(va_arg(args, unsigned  long), radix);
-                                                            break;
+                        case FormatLength::ShortShort:
+                        case FormatLength::Short:
+                        case FormatLength::Default:     ok = ok && Write(va_arg(args, unsigned int), radix);
+                                                        break;
+                                                        
+                        case FormatLength::Long:        ok = ok && Write(va_arg(args, unsigned  long), radix);
+                                                        break;
 
-                            case FormatLength::LongLong:    ok = ok && Write(va_arg(args, unsigned  long long), radix);
-                                                            break;
+                        case FormatLength::LongLong:    ok = ok && Write(va_arg(args, unsigned  long long), radix);
+                                                        break;
                         }
                     }
                 }
@@ -175,19 +181,21 @@ bool TextDevice::VFormat(const char* fmt, va_list args){
     return ok;
 }
 
-bool TextDevice::Format(const char* fmt, ...){
-    bool ok = true;
+bool TextDevice::Format(const char* fmt, ...)
+{
     va_list args;
     va_start(args, fmt);
-    ok = ok && VFormat(fmt, args);
+    bool ok = VFormat(fmt, args);
     va_end(args);
+
     return ok;
 }
 
-bool TextDevice::FormatBuffer(const char* msg, const void* buffer, size_t count){
+bool TextDevice::FormatBuffer(const char* msg, const void* buffer, size_t count)
+{
     const uint8_t* u8Buffer = (const uint8_t*)buffer;
-    
     bool ok = true;
+    
     ok = ok && Write(msg);
     for (uint16_t i = 0; i < count; i++)
     {
@@ -198,3 +206,4 @@ bool TextDevice::FormatBuffer(const char* msg, const void* buffer, size_t count)
 
     return ok;
 }
+
