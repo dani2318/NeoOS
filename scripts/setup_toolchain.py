@@ -1,7 +1,6 @@
 import os
 import subprocess
 import urllib.request
-import platform
 from pathlib import Path
 
 
@@ -33,15 +32,6 @@ NASM_EXE_WIN:str = toolchain_info["Executables"]["NASM_EXE_WIN"]
 NASM_EXE_WIN = NASM_EXE_WIN.replace("NASM_VERSION",NASM_VER)
 
 jobs:int = int(toolchain_info["ADVANCED"]["JOBS"])
-
-
-LIN_DIST:str = None
-
-try:
-    LIN_DIST = platform.freedesktop_os_release();
-except FileNotFoundError:
-    LIN_DIST = platform.system()
-
 
 MAIN_PATH = Path(__file__.replace("setup_toolchain.py","")).parent.absolute()
 
@@ -80,10 +70,7 @@ def download(url, where:str,filename):
 
     return True
 
-windows = platform.system() == "Windows"
-
 def download_binutils():
-
 
     os.system("cd "+ TOOLCHAIN_FOLDER)
 
@@ -95,25 +82,6 @@ def download_binutils():
 
     if not os.path.exists(BINUTILS_BUILD):
         os.mkdir(BINUTILS_BUILD)
-
-
-    if(windows):
-        print("Windows build not implemented!")
-        exit(-1)
-        with open("binutils_config.ps1", "w") as f:
-            f.write(f'$TOOLCHAIN_FOLDER = "{TOOLCHAIN_FOLDER}"\n')
-            f.write(f'$BINUTILS_VER = "{BINUTILS_VER}"\n')
-            f.write(f'$BINUTILS_FILENAME = "binutils-{BINUTILS_VER}.tar.gz"\n')
-            f.write(f'$BINUTILS_BUILD = "{BINUTILS_BUILD}"\n')
-            f.write(f'$TARGET = "{TARGET}"\n')
-            f.write(f'$TOOLCHAIN_PREFIX = "{os.path.abspath(os.path.join(TOOLCHAIN_FOLDER, "install"))}"\n')
-            f.write(f'$JOBS = {jobs}\n')
-
-        # Call PowerShell script
-        result = subprocess.run(["powershell", "-ExecutionPolicy", "Bypass", "-File", "build_binutils_win.ps1"])
-        if result.returncode != 0:
-            raise RuntimeError("PowerShell build script failed.")
-        return
 
 
     # Linux build
@@ -141,26 +109,6 @@ def download_gcc():
     if not os.path.exists(GCC_BUILD):
         os.mkdir(GCC_BUILD)
 
-
-    if windows:
-        print("Windows build not implemented!")
-        exit(-1)
-        # Write PowerShell config for GCC build
-        with open("gcc_config.ps1", "w") as f:
-            f.write(f'$TOOLCHAIN_FOLDER = "{TOOLCHAIN_FOLDER}"\n')
-            f.write(f'$GCC_VER = "{GCC_VER}"\n')
-            f.write(f'$GCC_FILENAME = "gcc-{GCC_VER}.tar.gz"\n')
-            f.write(f'$GCC_BUILD = "{GCC_BUILD}"\n')
-            f.write(f'$TARGET = "{TARGET}"\n')
-            f.write(f'$TOOLCHAIN_PREFIX = "{os.path.abspath(os.path.join(TOOLCHAIN_FOLDER, "install"))}"\n')
-            f.write(f'$JOBS = {jobs}\n')
-
-        # Call the PowerShell build script for GCC
-        result = subprocess.run(["powershell", "-ExecutionPolicy", "Bypass", "-File", "build_gcc_win.ps1"])
-        if result.returncode != 0:
-            raise RuntimeError("PowerShell GCC build script failed.")
-        return
-
     os.system("cd "+ TOOLCHAIN_FOLDER + "&& tar -xf " + GCC_FILENAME)
     os.system("cd "+GCC_BUILD+" && CFLAGS= ASMFLAGS= CC= CXX= LD= ASM= LINK_FLAGS= LIBS= && ../gcc-"+GCC_VER+"/configure \
 		--prefix=" + TOOLCHAIN_PREFIX +"\
@@ -174,15 +122,6 @@ def download_gcc():
     os.system(f"make -j{jobs} -C "+GCC_BUILD + " install-target-libgcc")
     return;
 
-def install_nasm():
-    if(LIN_DIST == "Windows"):
-        download(NASM_URL_WIN,TOOLCHAIN_FOLDER, f"nasm-{NASM_VER}-installer-x64.exe")
-        os.system(f"cd {TOOLCHAIN_FOLDER} && nasm-{NASM_VER}-installer-x64.exe /S")
-    
-
-
-    return
-
 def cleanup():
     os.system(f"rm -ri {TOOLCHAIN_FOLDER}/binutils-{BINUTILS_VER}")
     os.system(f"rm -ri {TOOLCHAIN_FOLDER}/build-binutils-{BINUTILS_VER}")
@@ -195,18 +134,14 @@ def bootstrap_toolchain():
         os.mkdir(TOOLCHAIN_FOLDER)
 
 
-    install_nasm()
     download_binutils()
     download_gcc()
     print("Now you can delete the build folders in the toolchain folder! (do not delete \"i686-elf\")")
     #cleanup()
 
 if __name__ == "__main__":
-    if windows: exit(-1)
     if not os.path.exists(TOOLCHAIN_FOLDER):
         os.mkdir(TOOLCHAIN_FOLDER)
 
-
-    install_nasm()
     download_binutils()
     download_gcc()
