@@ -54,6 +54,8 @@
         "ratio": "c",
         "array": "c",
         "tuple": "c",
-        "utility": "c"
+        "utility": "c",
+        "internet": "cpp",
+        "cstdarg": "cpp"
     }
 }

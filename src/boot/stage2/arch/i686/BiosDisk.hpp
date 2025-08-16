@@ -18,12 +18,13 @@ class BIOSDisk : public BlockDevice {
         size_t Size() override;
 
     private:
+        bool ReadNextSector();
         uint8_t  id;
         uint16_t cylinders;
         uint16_t sectors;
         uint16_t heads;
         bool haveExtensions;
         uint8_t buffer[SECTOR_SIZE];
-        uint32_t Position;
-        uint32_t size;
+        uint64_t Position;
+        uint64_t size;
 };

@@ -95,18 +95,18 @@ else:
 if HOST_ENVIRONMENT['imageType'] == 'floppy':
     HOST_ENVIRONMENT['imageType'] = 'fat12'
 
-HOST_ENVIRONMENT.Replace(ASCOMSTR        = "[Assembling] --> [$SOURCE]",
-                         CCCOMSTR        = "[Compiling] --> [$SOURCE]",
-                         CXXCOMSTR       = "[Compiling] -->  [$SOURCE]",
-                         FORTRANPPCOMSTR = "[Compiling] -->  [$SOURCE]",
-                         FORTRANCOMSTR   = "[Compiling] -->  [$SOURCE]",
-                         SHCCCOMSTR      = "[Compiling] -->  [$SOURCE]",
-                         SHCXXCOMSTR     = "[Compiling] -->  [$SOURCE]",
-                         LINKCOMSTR      = "[Linking] -->    [$TARGET]",
-                         SHLINKCOMSTR    = "[Linking] -->    [$TARGET]",
-                         INSTALLSTR      = "[Installing] --> [$TARGET]",
-                         ARCOMSTR        = "[Archiving] -->  [$TARGET]",
-                         RANLIBCOMSTR    = "[Ranlib] -->     [$TARGET]")
+# HOST_ENVIRONMENT.Replace(ASCOMSTR        = "[Assembling] --> [$SOURCE]",
+#                          CCCOMSTR        = "[Compiling] --> [$SOURCE]",
+#                          CXXCOMSTR       = "[Compiling] -->  [$SOURCE]",
+#                          FORTRANPPCOMSTR = "[Compiling] -->  [$SOURCE]",
+#                          FORTRANCOMSTR   = "[Compiling] -->  [$SOURCE]",
+#                          SHCCCOMSTR      = "[Compiling] -->  [$SOURCE]",
+#                          SHCXXCOMSTR     = "[Compiling] -->  [$SOURCE]",
+#                          LINKCOMSTR      = "[Linking] -->    [$TARGET]",
+#                          SHLINKCOMSTR    = "[Linking] -->    [$TARGET]",
+#                          INSTALLSTR      = "[Installing] --> [$TARGET]",
+#                          ARCOMSTR        = "[Archiving] -->  [$TARGET]",
+#                          RANLIBCOMSTR    = "[Ranlib] -->     [$TARGET]")
 
 platform_prefix = ''
 toolchain_platform_prefix = ''
