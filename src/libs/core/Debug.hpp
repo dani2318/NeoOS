@@ -1,5 +1,5 @@
 #pragma once
-#include <dev/TextDevice.hpp>
+#include <core/dev/TextDevice.hpp>
 
 namespace Debug {
 
@@ -11,7 +11,7 @@ namespace Debug {
         CRITICAL = 4
     };
 
-    void AddOutDevice(int minLogLevel,  bool colorOutput, TextDevice* device);
+    void AddOutDevice(Debug::Level minLogLevel,  bool colorOutput, TextDevice* device);
     void Debug(const char* module, const char* fmt, ...);
     void Info(const char* module, const char* fmt, ...);
     void Warn(const char* module, const char* fmt, ...);

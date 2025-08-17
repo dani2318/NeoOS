@@ -16,15 +16,17 @@ class BIOSDisk : public BlockDevice {
         size_t Read(uint8_t* data, size_t size) override; 
         void Seek(SeekPos pos, int rel) override;
         size_t Size() override;
+        size_t Position() override;
 
     private:
         bool ReadNextSector();
+        void LBA2CHS(uint32_t lba, uint16_t* cylinderOut, uint16_t* sectorOut, uint16_t* headOut);
         uint8_t  id;
         uint16_t cylinders;
         uint16_t sectors;
         uint16_t heads;
         bool haveExtensions;
         uint8_t buffer[SECTOR_SIZE];
-        uint64_t Position;
+        uint64_t position;
         uint64_t size;
 };

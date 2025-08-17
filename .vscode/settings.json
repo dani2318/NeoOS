@@ -57,6 +57,10 @@
         "utility": "c",
         "internet": "cpp",
         "cstdarg": "cpp",
-        "valarray": "cpp"
+        "valarray": "cpp",
+        "pr45877.C": "cpp",
+        "socket": "cpp",
+        "span": "cpp",
+        "stdio.h": "c"
     }
 }

@@ -10,4 +10,10 @@ uint32_t to_SegmentOffset(T addr){
     return (segment << 16) | offset;
 }
 
- 
+template<typename T>
+T to_Linear(uint32_t address){
+    uint32_t offset = (uint32_t) (address) & 0xFFFF;
+    uint32_t segment = (uint32_t) (address) >> 16;
+
+    return T(segment * 16 + offset);
+}

@@ -1,5 +1,5 @@
 #pragma once
-#include <dev/CharacterDevice.hpp>
+#include <core/dev/CharacterDevice.hpp>
 
 
 namespace arch{
