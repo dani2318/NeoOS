@@ -1,6 +1,8 @@
 #include "BiosDisk.hpp"
 #include "RealMemory.hpp"
 #include <core/Assert.hpp>
+#include <minmax.hpp>
+#include "memory.hpp"
 
 EXPORT bool ASMCALL BIOSDiskGetDriveParams(uint8_t drive,
                                            uint8_t *driveTypeOut,
@@ -83,28 +85,48 @@ bool BIOSDisk::Initialize()
 
 size_t BIOSDisk::Write(const uint8_t *data, size_t size)
 {
+    return 0;
 }
 
 bool BIOSDisk::ReadNextSector(){
     uint16_t cylinder, sector, head;
 
-    DISK_LBA2CHS(disk, lba, &cylinder, &sector, &head);
+    //DISK_LBA2CHS(disk, lba, &cylinder, &sector, &head);
 
     for (int i = 0; i < 3; i++)
     {
-        if (BIOSDiskRead(disk->id, cylinder, sector, head, sectors, buffer))
-            return true;
+        // if (BIOSDiskRead(disk->id, cylinder, sector, head, sectors, buffer))
+        //     return true;
 
-        BIOSDiskReset(this->id);
+        // BIOSDiskReset(this->id);
     }
 }
 
 
 size_t BIOSDisk::Read(uint8_t *data, size_t size)
-{
-    while(size > 0){
-
+{   
+    uint64_t initialPosition = Position;
+    if(Position == -1){
+        ReadNextSector();
+        Position = 0;
     }
+    
+    while( size > 0){
+        size_t bufferpos = Position % SECTOR_SIZE;
+        size_t leftInBuffer = SECTOR_SIZE - bufferpos;
+        size_t canRead = min(size, leftInBuffer);
+        memcpy(data, buffer + bufferpos, canRead);
+        size -= canRead;
+        data += canRead;
+        Position += canRead;
+
+        if(size > 0){
+            ReadNextSector();
+        }
+    }
+
+    return Position - initialPosition;
+
 }
 
 void BIOSDisk::Seek(SeekPos pos, int rel)

@@ -56,6 +56,7 @@
         "tuple": "c",
         "utility": "c",
         "internet": "cpp",
-        "cstdarg": "cpp"
+        "cstdarg": "cpp",
+        "valarray": "cpp"
     }
 }
