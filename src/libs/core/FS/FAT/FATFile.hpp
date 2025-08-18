@@ -1,14 +1,17 @@
 #pragma once
-#include <File.hpp>
+#include <core/FS/File.hpp>
+#include <core/Debug.hpp>
 #include <stdint.h>
-#include <FS/FAT/FATHeaders.hpp>
-#include <FS/FAT/FATFileEntry.hpp>
+#include <core/FS/FAT/FATHeaders.hpp>
+#include <core/FS/FAT/FATFileEntry.hpp>
 
 class FATFile : public File {
     public:
         FATFile();
         bool Open(FATFileEntry* fileEntry);
         bool isOpened() const {return this->Opened;};
+        bool ReadFileEntry(FATDirectoryEntry* dirEntry);
+
     private:
         uint8_t  Buffer[SectorSize];
         bool     Opened;

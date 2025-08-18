@@ -9,9 +9,13 @@
 #include <arch/i686/BiosDisk.hpp>
 #include <dev/MBR.hpp>
 #include <arch/i686/RealMemory.hpp>
+#include <Memory/Stage2Allocator.hpp>
+#include <memdefs.h>
 
 arch::i686::VGATextDevice VGADevice;
 arch::i686::E9Device E9Device;
+
+Stage2Allocator g_Allocator(reinterpret_cast<void*>(MEMORY_MIN), MEMORY_MAX - MEMORY_MIN);
 
 EXPORT void ASMCALL Start(uint16_t bootDrive,uint32_t partition){
 

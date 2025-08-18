@@ -12,3 +12,7 @@ bool FATFile::Open(FATFileEntry* fileEntry){
         return false;
     }
 }
+
+bool FATFile::ReadFileEntry(FATDirectoryEntry* dirEntry){
+    return Read(reinterpret_cast<uint8_t*>(dirEntry), sizeof(FATDirectoryEntry)) == sizeof(FAT_DirectoryEntry);
+}

@@ -3,7 +3,6 @@
 #include "FATFile.hpp"
 #include <stdint.h>
 
-constexpr int SectorSize      =  512;
 constexpr int MaxFileHandles  =  10;
 constexpr int FatCacheSize    =  5;        // In sectors
 constexpr uint32_t FatLfnLast = 0x40;

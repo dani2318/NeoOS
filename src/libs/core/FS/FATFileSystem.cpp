@@ -3,14 +3,11 @@
 
 constexpr const char* module_name = "FAT";
 
-constexpr int SectorSize      =  512;
-constexpr int MaxFileHandles  =  10;
-constexpr int FatCacheSize    =  5;    
 constexpr int ROOT_DIRECTORY_HANDLE = -1;
 
-FATFileSystem::FATFileSystem(void* fsMemory)
+FATFileSystem::FATFileSystem()
     : device(), 
-      Data(reinterpret_cast<FATData*>(fsMemory)),
+      Data(new FATData()),
       DataSectionLba(),
       FatType(),
       TotalSectors(),
@@ -97,7 +94,7 @@ bool FATFileSystem::Initialize(BlockDevice* device) {
 
 
     for(int i = 0; i < MaxFileHandles; i++)
-        Data->OpenedFiles[i]();
+        Data->OpenedFiles[i] = FATFile();
     
     Data->LFNCount = 0;
 
@@ -118,23 +115,10 @@ File* FATFileSystem::Open(FileEntry* parent, FileOpenMode mode){
     }
 
     Data->OpenedFiles[handle].Open((FATFileEntry*)parent);
-    fd->Public.Handle = handle;
-    fd->Public.IsDirectory = (entry->Attributes & FAT_ATTRIBUTE_DIRECTORY) != 0;
-    fd->Public.Position = 0;
-    fd->Public.Size = entry->Size;
-    fd->FirstCluster = entry->FirstClusterLow + ((uint32_t)entry->FirstClusterHigh << 16);
-    fd->CurrentCluster = fd->FirstCluster;
-    fd->CurrentSectorInCluster = 0;
 
-    if(!Partition_ReadSectors(disk, FAT_ClusterToLba(fd->CurrentCluster), 1, fd->Buffer)){
-        printf("[FAT] [FAT_OpenEntry] Read error!\r\n");
-        return false;
-    }
-
-    fd->Opened = true;
-    return &fd->Public;
+    return &Data->OpenedFiles[handle];
 }
 
-FileEntry* FATFileSystem::GetNextFileEntry(FileEntry* parent, FileEntry* previous){
+FileEntry* FATFileSystem::GetNextFileEntry(File* parent, const FileEntry& previous){
 
 }

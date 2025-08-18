@@ -1,5 +1,5 @@
 #pragma once
-#include <FileEntry.hpp>
+#include <core/FS/FileEntry.hpp>
 
 class FATFileEntry : public FileEntry
 {

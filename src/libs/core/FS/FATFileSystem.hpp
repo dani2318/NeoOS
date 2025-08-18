@@ -8,9 +8,9 @@ constexpr int FATReqMemory = 0x10000;
 
 class FATFileSystem : public FileSystem{
     public:
-        FATFileSystem(void* fsMemory);
+        FATFileSystem();
         bool Initialize(BlockDevice* device) override;
-        FileEntry* GetNextFileEntry(FileEntry* parent, FileEntry* previous) override;
+        FileEntry* GetNextFileEntry(File* parent, const FileEntry& previous) override;
         File* Open(FileEntry* parent, FileOpenMode mode) override;
     private:
         bool ReadBootSector();

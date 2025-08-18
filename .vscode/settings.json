@@ -63,6 +63,15 @@
         "span": "cpp",
         "stdio.h": "c",
         "pr77550.C": "cpp",
-        "io_context": "cpp"
+        "io_context": "cpp",
+        "hash_map": "cpp",
+        "hash_set": "cpp",
+        "slist": "cpp",
+        "bitset": "cpp",
+        "flat_map": "cpp",
+        "flat_set": "cpp",
+        "stacktrace": "cpp",
+        "dynamic_bitset": "cpp",
+        "initializer_list": "cpp"
     }
 }
