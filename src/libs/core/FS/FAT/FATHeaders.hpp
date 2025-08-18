@@ -68,14 +68,6 @@ struct FATBootSector
 
 } __attribute__((packed));
 
-struct FATFile
-{
-    int Handle;
-    bool IsDirectory;
-    uint32_t Position;
-    uint32_t Size;
-};
-
 struct FATLFNBlock{
     uint8_t Order;
     int16_t Chars[13];
@@ -83,7 +75,7 @@ struct FATLFNBlock{
 
 struct FATFileData{
     uint8_t  Buffer[SectorSize];
-    FATFile Public;
+    FATFile  Public;
     bool     Opened;
     uint32_t FirstCluster;
     uint32_t CurrentCluster;

@@ -62,6 +62,7 @@
         "socket": "cpp",
         "span": "cpp",
         "stdio.h": "c",
-        "pr77550.C": "cpp"
+        "pr77550.C": "cpp",
+        "io_context": "cpp"
     }
 }

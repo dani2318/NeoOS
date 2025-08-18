@@ -1,17 +1,9 @@
 #pragma once
 #include <dev/BlockDevice.hpp>
 #include "File.hpp"
+#include "FileEntry.hpp"
 #include <stdbool.h>
 
-enum class FileType{
-    File,
-    Directory
-};
-
-struct FileEntry{
-    char Name[256];
-    FileType Type;
-};
 
 enum FileOpenMode{
     Read,

@@ -2,6 +2,7 @@
 #include "FileSystem.hpp"
 #include <FS/FAT/FATData.hpp>
 #include <FS/FAT/FATHeaders.hpp>
+#include <FS/FAT/FATFileEntry.hpp>
 
 constexpr int FATReqMemory = 0x10000;
 

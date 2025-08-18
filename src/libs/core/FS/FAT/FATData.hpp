@@ -1,5 +1,6 @@
 #pragma once
 #include "FATHeaders.hpp"
+#include "FATFile.hpp"
 #include <stdint.h>
 
 constexpr int SectorSize      =  512;
@@ -14,8 +15,8 @@ struct FATData
         uint8_t       BootSectorBytes[SectorSize];
     } BS;
 
-    FATFileData RootDirectory;
-    FATFileData OpenedFiles[MaxFileHandles];
+    FATFile RootDirectory;
+    FATFile OpenedFiles[MaxFileHandles];
 
     uint8_t  FatCache[FatCacheSize * SectorSize];
     uint32_t FatCachePosition;
