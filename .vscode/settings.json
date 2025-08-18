@@ -61,6 +61,7 @@
         "pr45877.C": "cpp",
         "socket": "cpp",
         "span": "cpp",
-        "stdio.h": "c"
+        "stdio.h": "c",
+        "pr77550.C": "cpp"
     }
 }

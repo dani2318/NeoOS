@@ -73,6 +73,11 @@ struct FAT_FileData{
 
 typedef struct FAT_FileData FAT_FileData;
 
+typedef struct {
+    uint8_t Order;
+    int16_t Chars[13];
+} FATLFNBlock;
+
 struct FAT_Data
 {
     union{
@@ -99,6 +104,14 @@ static uint32_t  g_SectorsPerFat;
 uint32_t FAT_ClusterToLba(uint32_t cluster)
 {
     return g_DataSectionLBA + (cluster - 2) * g_Data->BS.BootSector.SectorsPerCluster;
+}
+
+
+int FAT_CompareLFNBlocks(const void* blockA, const void* blockB)
+{
+    FATLFNBlock* a = (FATLFNBlock*)blockA;
+    FATLFNBlock* b = (FATLFNBlock*)blockB;
+    return ((int)a->Order) - ((int)b->Order);
 }
 
 bool FAT_ReadBootSector(Partition* disk)
@@ -364,13 +377,44 @@ void FAT_GetShortName(const char* fileName, char* shortName, int length){
 bool FAT_FindFile(Partition* disk, FAT_File * file, const char* name, FAT_DirectoryEntry* entryOut)
 {
     char shortName[12];
-    char longName[256];
+    //char longName[256];
     FAT_DirectoryEntry entry;
 
     FAT_GetShortName(name, shortName, 12);
 
     while (FAT_ReadEntry(disk, file, &entry))
     {
+
+        /*if (entry.Attributes == FAT_ATTRIBUTE_LFN) {
+            FAT_LongFileEntry* lfn = (FAT_LongFileEntry*)&entry;
+
+            int idx = g_Data->LFNCount++;
+            g_Data->LFNBlocks[idx].Order = lfn->Order & (FAT_LFN_LAST - 1);
+            memcpy(g_Data->LFNBlocks[idx].Chars, lfn->Chars1, sizeof(lfn->Chars1));
+            memcpy(g_Data->LFNBlocks[idx].Chars + 5, lfn->Chars2, sizeof(lfn->Chars2));
+            memcpy(g_Data->LFNBlocks[idx].Chars + 11, lfn->Chars1, sizeof(lfn->Chars3));
+
+            // is this the last LFN block
+            if ((lfn->Order & FAT_LFN_LAST) != 0) {
+                qsort(g_Data->LFNBlocks, g_Data->LFNCount, sizeof(FAT_LFNBlock), FAT_CompareLFNBlocks);
+                char* namePos = longName;
+                for (int i = 0; i < g_Data->LFNCount; i++)
+                {
+                    int16_t* chars = g_Data->LFNBlocks[i].Chars;
+                    int16_t* charsLimit = chars + 13;
+
+                    while (chars < charsLimit && *chars != 0)
+                    {
+                        int codepoint;
+                        chars = utf16_to_codepoint(chars, &codepoint);
+                        namePos = codepoint_to_utf8(codepoint, namePos);
+                    }
+                }
+                *namePos = 0;
+                printf("LFN: %s\n", longName);
+            }
+        }*/
+        
         //Search for the file:
         if (memcmp(shortName, entry.Name, 11) == 0)
         {
