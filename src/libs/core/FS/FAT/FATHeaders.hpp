@@ -1,5 +1,6 @@
 #pragma once
 #include <stdint.h>
+#include "FATFile.hpp"
 
 constexpr int SectorSize      =  512;
 

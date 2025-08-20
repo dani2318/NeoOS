@@ -7,6 +7,6 @@ enum class FileType{
 
 struct FileEntry{
     char Name[256];
-    FileType Type;
     uint8_t FSData[256];
+    FileType Type;
 };

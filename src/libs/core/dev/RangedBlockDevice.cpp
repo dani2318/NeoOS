@@ -28,23 +28,18 @@ size_t RangedBlockDevice::Write(const uint8_t* data, size_t size)  {
     return device->Write(data, size);
 }
 
-void RangedBlockDevice::Seek(SeekPos pos, int rel) {
+bool RangedBlockDevice::Seek(SeekPos pos, int rel) {
     if(device == nullptr)
-        return;
+        return false;
     
     switch (pos)
     {
     case SeekPos::Set:
-        this->device->Seek(SeekPos::Set, this->begin + rel);
-        break;
+        return this->device->Seek(SeekPos::Set, this->begin + rel);
     case SeekPos::Current:
-        this->device->Seek(SeekPos::Current, rel);
-        break;
+        return this->device->Seek(SeekPos::Current, rel);
     case SeekPos::End:
-        this->device->Seek(SeekPos::End, this->begin + this->size);
-        break;
-    default:
-        break;
+        return this->device->Seek(SeekPos::End, this->begin + this->size);
     }
 }
 

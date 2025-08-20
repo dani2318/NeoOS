@@ -2,7 +2,6 @@
 #include "FileSystem.hpp"
 #include <FS/FAT/FATData.hpp>
 #include <FS/FAT/FATHeaders.hpp>
-#include <FS/FAT/FATFileEntry.hpp>
 
 constexpr int FATReqMemory = 0x10000;
 
@@ -10,12 +9,17 @@ class FATFileSystem : public FileSystem{
     public:
         FATFileSystem();
         bool Initialize(BlockDevice* device) override;
-        FileEntry* GetNextFileEntry(File* parent, const FileEntry& previous) override;
-        File* Open(FileEntry* parent, FileOpenMode mode) override;
+        File* Open(FileEntry* file, FileOpenMode mode) override;
+        File* RootDirectory() override;
+        bool ReadSector(uint32_t lba, uint8_t* buffer, size_t count=1);
+        bool ReadSectorFromCluster(uint32_t cluster, uint32_t sectorOffset, uint8_t* buffer);
+        uint8_t GetFatType() const {return this->FatType;};
+        FATData& GetFatData() const {return *this->Data;};
+        uint32_t GetNextCluster(uint32_t currentCluster);
     private:
         bool ReadBootSector();
-        bool ReadSector(uint32_t lba, uint8_t* buffer);
         uint32_t ClusterToLba(uint32_t cluster);
+        bool ReadFat(uint32_t lbaOffset);
         void Detect();
         BlockDevice* device;
         FATData*  Data;
