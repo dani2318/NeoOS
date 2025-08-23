@@ -84,7 +84,7 @@ bool FATFileSystem::Initialize(BlockDevice* device) {
         rootDirectoryEntry->Size = 0xFFFFFFFF;
         uint32_t size = rootDirectoryEntry->Size;
         uint32_t firstCluster = rootDirectoryEntry->FirstClusterLow + ((uint32_t)rootDirectoryEntry->FirstClusterHigh << 16);
-        if(!Data->RootDirectory.Open(this, firstCluster, size))
+        if(!Data->RootDirectory.Open(this, Data->BS.BootSector.EBR32.RootdirCluster, 0xFFFFFFFF, true))
             return false;
     } else {
         uint32_t rootDirLBA = Data->BS.BootSector.ReservedSectors + SectorsPerFat * Data->BS.BootSector.FatCount;
@@ -121,7 +121,7 @@ File* FATFileSystem::Open(FileEntry* file, FileOpenMode mode){
     const FATDirectoryEntry* directoryEntry = reinterpret_cast<const FATDirectoryEntry*>(file);
     uint32_t size = directoryEntry->Size;
     uint32_t FirstCluster = directoryEntry->FirstClusterLow + ((uint32_t)directoryEntry->FirstClusterHigh << 16);
-    Data->OpenedFiles[handle].Open(this, FirstCluster, size);
+    Data->OpenedFiles[handle].Open(this, FirstCluster, size, directoryEntry->Attributes & FAT_ATTRIBUTE_DIRECTORY);
 
     return &Data->OpenedFiles[handle];
 }

@@ -1,8 +1,7 @@
 #pragma once
-#include <stdint.h>
-#include "FATFile.hpp"
 
-constexpr int SectorSize      =  512;
+#include <stdint.h>
+constexpr int SectorSize = 512;
 
 enum FAT_Attributes{
     FAT_ATTRIBUTE_READ_ONLY            = 0x01,

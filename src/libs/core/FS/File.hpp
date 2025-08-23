@@ -7,6 +7,6 @@
 
 class File : BlockDevice{
     public:
-        virtual FileEntry GetNextFileEntry(File* parent, const FileEntry& previous) = 0;
+        virtual bool ReadFileEntry(FileEntry& entryOut) = 0;
 
 };
