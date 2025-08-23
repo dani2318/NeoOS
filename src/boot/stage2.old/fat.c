@@ -73,6 +73,11 @@ struct FAT_FileData{
 
 typedef struct FAT_FileData FAT_FileData;
 
+typedef struct {
+    uint8_t Order;
+    int16_t Chars[13];
+} FATLFNBlock;
+
 struct FAT_Data
 {
     union{
@@ -85,6 +90,7 @@ struct FAT_Data
 
     uint8_t  FatCache[FAT_CACHE_SIZE * SECTOR_SIZE];
     uint32_t FatCachePosition;
+
 };
 
 typedef struct FAT_Data FAT_Data;
@@ -98,6 +104,14 @@ static uint32_t  g_SectorsPerFat;
 uint32_t FAT_ClusterToLba(uint32_t cluster)
 {
     return g_DataSectionLBA + (cluster - 2) * g_Data->BS.BootSector.SectorsPerCluster;
+}
+
+
+int FAT_CompareLFNBlocks(const void* blockA, const void* blockB)
+{
+    FATLFNBlock* a = (FATLFNBlock*)blockA;
+    FATLFNBlock* b = (FATLFNBlock*)blockB;
+    return ((int)a->Order) - ((int)b->Order);
 }
 
 bool FAT_ReadBootSector(Partition* disk)
@@ -242,7 +256,6 @@ bool FAT_Initialize(Partition* disk) {
     for(int i = 0; i < MAX_FILE_HANDLES; i++)
         g_Data->OpenedFiles[i].Opened = false;
     
-
     return true;
 }
 
@@ -340,33 +353,70 @@ void FAT_Close(FAT_File * file){
     }
 }
 
-bool FAT_FindFile(Partition* disk, FAT_File * file, const char* name, FAT_DirectoryEntry* entryOut)
-{
-    char fatName[12];
-    FAT_DirectoryEntry entry;
+void FAT_GetShortName(const char* fileName, char* shortName, int length){
 
     // convert from name to fat name
-    memset(fatName, ' ', sizeof(fatName));
-    fatName[11] = '\0';
+    memset(shortName, ' ', length);
+    shortName[11] = '\0';
 
-    const char* ext = strchr(name, '.');
+    const char* ext = strchr(fileName, '.');
     if (ext == NULL)
-        ext = name + 11;
+        ext = fileName + 11;
 
-    for (int i = 0; i < 8 && name[i] && name + i < ext; i++)
-        fatName[i] = toUpper(name[i]);
+    for (int i = 0; i < 8 && fileName[i] && fileName + i < ext; i++)
+        shortName[i] = toUpper(fileName[i]);
 
-    if (ext != name + 11)
+    if (ext != fileName + 11)
     {
         for (int i = 0; i < 3 && ext[i + 1]; i++)
-            fatName[i + 8] = toUpper(ext[i + 1]);
+            shortName[i + 8] = toUpper(ext[i + 1]);
     }
+
+}
+
+bool FAT_FindFile(Partition* disk, FAT_File * file, const char* name, FAT_DirectoryEntry* entryOut)
+{
+    char shortName[12];
+    //char longName[256];
+    FAT_DirectoryEntry entry;
+
+    FAT_GetShortName(name, shortName, 12);
 
     while (FAT_ReadEntry(disk, file, &entry))
     {
-        // printf("FAT name: %s\r\n", fatName);
-        // printf("Entry name: %s\r\n", entry.Name);
-        if (memcmp(fatName, entry.Name, 11) == 0)
+
+        /*if (entry.Attributes == FAT_ATTRIBUTE_LFN) {
+            FAT_LongFileEntry* lfn = (FAT_LongFileEntry*)&entry;
+
+            int idx = g_Data->LFNCount++;
+            g_Data->LFNBlocks[idx].Order = lfn->Order & (FAT_LFN_LAST - 1);
+            memcpy(g_Data->LFNBlocks[idx].Chars, lfn->Chars1, sizeof(lfn->Chars1));
+            memcpy(g_Data->LFNBlocks[idx].Chars + 5, lfn->Chars2, sizeof(lfn->Chars2));
+            memcpy(g_Data->LFNBlocks[idx].Chars + 11, lfn->Chars1, sizeof(lfn->Chars3));
+
+            // is this the last LFN block
+            if ((lfn->Order & FAT_LFN_LAST) != 0) {
+                qsort(g_Data->LFNBlocks, g_Data->LFNCount, sizeof(FAT_LFNBlock), FAT_CompareLFNBlocks);
+                char* namePos = longName;
+                for (int i = 0; i < g_Data->LFNCount; i++)
+                {
+                    int16_t* chars = g_Data->LFNBlocks[i].Chars;
+                    int16_t* charsLimit = chars + 13;
+
+                    while (chars < charsLimit && *chars != 0)
+                    {
+                        int codepoint;
+                        chars = utf16_to_codepoint(chars, &codepoint);
+                        namePos = codepoint_to_utf8(codepoint, namePos);
+                    }
+                }
+                *namePos = 0;
+                printf("LFN: %s\n", longName);
+            }
+        }*/
+        
+        //Search for the file:
+        if (memcmp(shortName, entry.Name, 11) == 0)
         {
             *entryOut = entry;
             return true;
@@ -411,8 +461,6 @@ FAT_File * FAT_Open(Partition* disk, const char* path){
         FAT_DirectoryEntry entry;
         if (FAT_FindFile(disk, current, name, &entry))
         {
-
-
             FAT_Close(current);
 
             // check if directory

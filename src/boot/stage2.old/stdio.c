@@ -112,7 +112,7 @@ void puts(const char* str){
 #define PRINTF_LENGTH_LONG_LONG         4
 
 
-const char g_HexCharacters[] = "0123456789abcdef";
+const char g_HexChars[] = "0123456789abcdef";
 
 void printf_unsigned(unsigned long long number, int radix) {
     char buffer[32];
@@ -121,7 +121,7 @@ void printf_unsigned(unsigned long long number, int radix) {
     do {
         unsigned long long rem = number % radix;
         number /= radix;
-        buffer[pos++] = g_HexCharacters[rem];
+        buffer[pos++] = g_HexChars[rem];
     } while(number > 0);
 
     while (--pos >= 0)
@@ -263,8 +263,8 @@ void print_buffer(const char* msg, const void* buffer, uint32_t count)
     puts(msg);
     for (uint16_t i = 0; i < count; i++)
     {
-        putc(g_HexCharacters[u8Buffer[i] >> 4]);
-        putc(g_HexCharacters[u8Buffer[i] & 0xF]);
+        putc(g_HexChars[u8Buffer[i] >> 4]);
+        putc(g_HexChars[u8Buffer[i] & 0xF]);
     }
     puts("\n");
 }
