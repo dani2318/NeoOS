@@ -72,6 +72,8 @@
         "flat_set": "cpp",
         "stacktrace": "cpp",
         "dynamic_bitset": "cpp",
-        "initializer_list": "cpp"
+        "initializer_list": "cpp",
+        "pr94216.C": "cpp",
+        "source_location": "c"
     }
 }

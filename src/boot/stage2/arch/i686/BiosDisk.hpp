@@ -14,7 +14,7 @@ class BIOSDisk : public BlockDevice {
         bool Initialize();
         size_t Write(const uint8_t* data, size_t size) override; 
         size_t Read(uint8_t* data, size_t size) override; 
-        void Seek(SeekPos pos, int rel) override;
+        bool Seek(SeekPos pos, int rel) override;
         size_t Size() override;
         size_t Position() override;
 

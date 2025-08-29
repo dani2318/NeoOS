@@ -1,4 +1,10 @@
 #include <stdint.h>
+#include <memdefs.h>
+#include <arch/i686/RealMemory.hpp>
+#include <dev/MBR.hpp>
+#include <arch/i686/BiosDisk.hpp>
+#include <Memory/Stage2Allocator.hpp>
+
 #include <core/Defs.hpp>
 #include <core/arch/i686/VGATextDevice.hpp>
 #include <core/arch/i686/E9Device.hpp>
@@ -6,15 +12,14 @@
 #include <core/dev/RangedBlockDevice.hpp>
 #include <core/arch/i686/IO.hpp>
 #include <core/Debug.hpp>
-#include <arch/i686/BiosDisk.hpp>
-#include <dev/MBR.hpp>
-#include <arch/i686/RealMemory.hpp>
-#include <Memory/Stage2Allocator.hpp>
-#include <memdefs.h>
+#include <core/memory/Memory.hpp>
+#include <boot/bootparams.hpp>
+
 
 arch::i686::VGATextDevice VGADevice;
 arch::i686::E9Device E9Device;
 
+BootParameters bootParams;
 Stage2Allocator g_Allocator(reinterpret_cast<void*>(MEMORY_MIN), MEMORY_MAX - MEMORY_MIN);
 
 EXPORT void ASMCALL Start(uint16_t bootDrive,uint32_t partition){
@@ -32,6 +37,15 @@ EXPORT void ASMCALL Start(uint16_t bootDrive,uint32_t partition){
         arch::i686::Panic();
     }
     Debug::Info("Stage2", "[OK] Initialize disk!");
+
+    bootParams.BootDevice = bootDrive;
+    MemoryDetect(&bootParams.Memory);
+
+
+
+    Debug::Info("Stage2", "[OK] Memory detection!");
+    int rc = bootParams.Memory.RegionCount;
+    Debug::Info("Stage2", "[OK] Memory Manager found %llu memory regions!", rc);
 
     BlockDevice* part;
     RangedBlockDevice partitionRange;
