@@ -154,8 +154,14 @@ bool FATFile::UpdateCurrentCluster(){
     return fs->ReadSectorFromCluster(CurrentCluster, CurrentSectorInCluster, this->Buffer);
 }
 
-bool FATFile::ReadFileEntry(FileEntry& entryOut){
-    return false;
+FileEntry* FATFile::ReadFileEntry(){
+    FATDirectoryEntry entry;
+    if(ReadFileEntry(&entry)){
+        FATFileEntry* fileEntry = fs->AllocateFileEntry();
+        fileEntry->Initialize(fs, entry);
+        return fileEntry;
+    }
+    return nullptr;
 }
 
 /// @brief Unsupported!!! THIS FUNCTION IS NOT YET IMPLEMENTED!

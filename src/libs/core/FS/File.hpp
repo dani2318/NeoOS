@@ -7,6 +7,6 @@
 
 class File : BlockDevice{
     public:
-        virtual bool ReadFileEntry(FileEntry& entryOut) = 0;
+        virtual FileEntry* ReadFileEntry() = 0;
 
 };

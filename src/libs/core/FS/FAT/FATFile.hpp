@@ -21,10 +21,9 @@ class FATFile : public File {
         virtual bool Seek(SeekPos pos, int rel) override;
         virtual size_t Size() override { return size; };
         virtual size_t Position() override { return position; };
-        virtual bool ReadFileEntry(FileEntry& entryOut) override;
+        virtual FileEntry* ReadFileEntry() override;
     private:
         bool UpdateCurrentCluster();
-
         uint8_t  Buffer[SectorSize];
         bool     Opened;
         bool     isRootDirectory;

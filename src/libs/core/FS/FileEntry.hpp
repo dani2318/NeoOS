@@ -4,9 +4,14 @@ enum class FileType{
     File,
     Directory
 };
-
-struct FileEntry{
-    char Name[256];
-    uint8_t FSData[256];
-    FileType Type;
+enum FileOpenMode{
+    Read,
+    Write,
+    Append
+};
+class FileEntry {
+    public:
+        virtual const char* Name() = 0;
+        virtual const FileType Type() = 0;
+        virtual File* Open(FileOpenMode mode) = 0;
 };

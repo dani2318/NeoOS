@@ -29,7 +29,7 @@ int memcmp(const void * ptr1, const void * ptr2, uint16_t num){
     return 0;
 }
 
-void* segmentoffset_to_linear(void* address){
+EXPORT void* segmentoffset_to_linear(void* address){
     uint32_t offset = (uint32_t) (address) & 0xFFFF;
     uint32_t segment = (uint32_t) (address) >> 16;
 

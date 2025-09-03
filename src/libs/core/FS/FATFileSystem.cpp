@@ -11,10 +11,7 @@ FATFileSystem::FATFileSystem()
       DataSectionLba(),
       FatType(),
       TotalSectors(),
-      SectorsPerFat() { 
-
-
-}
+      SectorsPerFat() {}
 
 void FATFileSystem::Detect() {
     uint32_t dataCluster = (TotalSectors - DataSectionLba) / Data->BS.BootSector.SectorsPerCluster;
@@ -36,7 +33,6 @@ bool FATFileSystem::ReadSectorFromCluster(uint32_t cluster, uint32_t sectorOffse
     return ReadSector(this->ClusterToLba(cluster) + sectorOffset, buffer);
 }
 
-
 bool FATFileSystem::ReadBootSector(){
     return ReadSector(0, Data->BS.BootSectorBytes);
 }
@@ -49,30 +45,33 @@ bool FATFileSystem::ReadSector(uint32_t lba, uint8_t* buffer, size_t count){
 bool FATFileSystem::Initialize(BlockDevice* device) {
     this->device = device;
 
+    // Trying to read the bootsector.
     if(!ReadBootSector()){
         Debug::Error(module_name,"Failed to read bootsector!");
         return false;
     }
 
+    // Setting FatCachePosition to 0xFFFFFFFF (this number will change fater the Initialization and the Filesystem started to read files).
     Data->FatCachePosition = 0xFFFFFFFF;
 
-    TotalSectors = Data->BS.BootSector.TotalSectors;
+    Detect();
 
-    // If 'TotalSectors' is 0 then we are using FAT32 and should use 'g_Data->BS.BootSector.LargeSectorCount'
-    if(TotalSectors == 0){
+    // FatType is set by the call to the 'Detect()' function before if is equal to FATType::FAT32 then the file system is using FAT32 and the boolean is true otherwise is false
+    bool isFAT32 = FatType == FATType::FAT32;
+
+    // If we are using FAT32 and should use 'g_Data->BS.BootSector.EBR32.SectorsPerFat' as SectorPerFat
+    // and should use 'g_Data->BS.BootSector.LargeSectorCount' as TotalSectors
+
+    if(isFAT32){
         TotalSectors = Data->BS.BootSector.LargeSectorCount;
-    }
-
-    bool isFAT32 = false;
-    SectorsPerFat = Data->BS.BootSector.SectorsPerFat;
-    // If 'SectorsPerFat' is 0 then we are using FAT32 and should use 'g_Data->BS.BootSector.EBR32.SectorsPerFat'
-    if(SectorsPerFat == 0){
-        isFAT32 = true;
         SectorsPerFat = Data->BS.BootSector.EBR32.SectorsPerFat;
+    }else{  
+        // In this case we are in FAT12 or FAT16
+        TotalSectors = Data->BS.BootSector.TotalSectors;
+        SectorsPerFat = Data->BS.BootSector.SectorsPerFat;
     }
     
-    // Define the root directory LBA and Size.
-
+    // Reading from the file system the Directory Entry of the Root Directory.
     if (isFAT32) {
         DataSectionLba = Data->BS.BootSector.ReservedSectors + SectorsPerFat * Data->BS.BootSector.FatCount;
 
@@ -95,37 +94,27 @@ bool FATFileSystem::Initialize(BlockDevice* device) {
             return false;
     }
 
-    Detect();
-
-
-    for(int i = 0; i < MaxFileHandles; i++)
-        Data->OpenedFiles[i] = FATFile();
-    
+    // Long file name is 0 by default!
     Data->LFNCount = 0;
 
     return true;
 }
 
-File* FATFileSystem::Open(FileEntry* file, FileOpenMode mode){
-    int handle = -1;
-
-    for (int i = 0; i < MaxFileHandles && handle < 0; i++){
-        if(!Data->OpenedFiles[i].isOpened()){
-            handle = i;
-        }
-    }
-    if(handle < 0){
-        Debug::Error(module_name, "Run out of HANDLES!");
-        return nullptr;
-    }
-    const FATDirectoryEntry* directoryEntry = reinterpret_cast<const FATDirectoryEntry*>(file);
-    uint32_t size = directoryEntry->Size;
-    uint32_t FirstCluster = directoryEntry->FirstClusterLow + ((uint32_t)directoryEntry->FirstClusterHigh << 16);
-    Data->OpenedFiles[handle].Open(this, FirstCluster, size, directoryEntry->Attributes & FAT_ATTRIBUTE_DIRECTORY);
-
-    return &Data->OpenedFiles[handle];
+FATFile* FATFileSystem::AllocateFile(){
+    return Data->OpenedFilePool.Allocate();
 }
 
+void FATFileSystem::ReleaseFile(FATFile* file){
+    Data->OpenedFilePool.Free(file);
+}
+
+FATFileEntry* FATFileSystem::AllocateFileEntry(){
+    return Data->FileEntryPool.Allocate();
+}
+
+void FATFileSystem::ReleaseFileEntry(FATFileEntry* file){
+    Data->FileEntryPool.Free(file);
+}
 
 File* FATFileSystem::RootDirectory(){
     return &Data->RootDirectory;
