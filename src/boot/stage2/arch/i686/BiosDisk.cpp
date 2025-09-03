@@ -166,7 +166,7 @@ size_t BIOSDisk::Read(uint8_t *data, size_t size)
 
 }
 
-void BIOSDisk::Seek(SeekPos pos, int rel)
+bool BIOSDisk::Seek(SeekPos pos, int rel)
 {
     switch(pos){
         case SeekPos::Set:
@@ -180,6 +180,8 @@ void BIOSDisk::Seek(SeekPos pos, int rel)
             position = size;
             break;
     }
+
+    return true;
 }
 
 size_t BIOSDisk::Size()

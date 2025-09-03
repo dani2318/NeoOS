@@ -32,7 +32,6 @@ Import('libcore')
 
 staticlibs = [
     libcore,
-
 ]
 
 objects = [

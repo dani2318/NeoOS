@@ -11,7 +11,9 @@ path_to="$(pwd)/$logfile"
 
 echo "$path_to"
 #QEMU_ARGS="-debugcon file:${path_to} -m 32"
-QEMU_ARGS="-debugcon stdio -m 32"
+QEMU_ARGS="-debugcon stdio -m 32 -d int,cpu_reset  -no-reboot -no-shutdown"
+#QEMU_ARGS="-debugcon stdio -m 32 -d int -no-reboot -no-shutdown"
+#QEMU_ARGS="-debugcon stdio -m 32  -no-reboot -no-shutdown"
 
 if [ "$#" -le 1 ]; then
     echo "Usage: ./run.sh <image_type> <image>"

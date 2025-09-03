@@ -75,7 +75,7 @@ struct FATLFNBlock{
 
 struct FATFileData{
     uint8_t  Buffer[SectorSize];
-    FATFile  Public;
+    // FATFile  Public;
     bool     Opened;
     uint32_t FirstCluster;
     uint32_t CurrentCluster;

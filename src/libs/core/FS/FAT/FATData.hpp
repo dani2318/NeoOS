@@ -2,6 +2,7 @@
 #include "FATHeaders.hpp"
 #include "FATFile.hpp"
 #include <stdint.h>
+#include <core/memory/StaticObjectPool.hpp>
 
 constexpr int MaxFileHandles  =  10;
 constexpr int FatCacheSize    =  5;        // In sectors
@@ -15,7 +16,8 @@ struct FATData
     } BS;
 
     FATFile RootDirectory;
-    FATFile OpenedFiles[MaxFileHandles];
+    StaticObjectPool<FATFile, MaxFileHandles> OpenedFilePool;
+    StaticObjectPool<FATFileEntry, MaxFileHandles> FileEntryPool;
 
     uint8_t  FatCache[FatCacheSize * SectorSize];
     uint32_t FatCachePosition;

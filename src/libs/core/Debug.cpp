@@ -8,11 +8,11 @@ namespace{
 
     static const char* const g_LogSeverityColors[] =
     {
-        [static_cast<int>(Debug::Level::DEBUG)]        = "\033[2;37m",
-        [static_cast<int>(Debug::Level::INFO)]         = "\033[37m",
-        [static_cast<int>(Debug::Level::WARN)]         = "\033[1;33m",
-        [static_cast<int>(Debug::Level::ERROR)]        = "\033[1;31m",
-        [static_cast<int>(Debug::Level::CRITICAL)]     = "\033[1;37;41m",
+        "\033[2;37m",
+        "\033[37m",
+        "\033[1;33m",
+        "\033[1;31m",
+        "\033[1;37;41m",
     };
 
     static const char* const g_ColorReset = "\033[0m";

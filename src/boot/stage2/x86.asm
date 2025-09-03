@@ -14,4 +14,3 @@ x86_inb:
     xor eax, eax
     in al, dx
     ret
-

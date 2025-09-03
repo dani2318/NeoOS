@@ -28,5 +28,5 @@ $DISK_CFG
 $BOOT_CFG
 EOF
 
-bochs-debugger -q -f .bochs_config
+/usr/bin/bochs-bin -q -f .bochs_config
 rm -f .bochs_config
