@@ -41,6 +41,8 @@ bool RangedBlockDevice::Seek(SeekPos pos, int rel) {
     case SeekPos::End:
         return this->device->Seek(SeekPos::End, this->begin + this->size);
     }
+
+    return false;
 }
 
 size_t RangedBlockDevice::Size() {

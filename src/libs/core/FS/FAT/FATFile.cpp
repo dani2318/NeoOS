@@ -26,7 +26,7 @@ FATFile::FATFile()
 /// @param firstCluster     The fistcluster to read
 /// @param size             The size to read
 /// @return A boolean that tell if the operation is compleated correctly
-bool FATFile::Open(FATFileSystem* fileSystem, uint32_t firstCluster, uint32_t size, bool isDirectory){
+bool FATFile::Open(FATFileSystem* fileSystem, uint32_t firstCluster,const char* name, uint32_t size, bool isDirectory){
     
     this->isRootDirectory = false;
     this->position = 0;
@@ -38,10 +38,12 @@ bool FATFile::Open(FATFileSystem* fileSystem, uint32_t firstCluster, uint32_t si
     this->CurrentSectorInCluster = 0;
 
     if (!fileSystem->ReadSectorFromCluster(this->FirstCluster, CurrentSectorInCluster, this->Buffer)){
-        Debug::Error(module_name, "Failed to open file!!");
+        Debug::Error(module_name, "Failed to open file %s!!", name);
         return false;
     }
     this->Opened = true;
+
+    return true;
 }
 /// @brief This is used to read the root directory in the FAT12 or FAT16 Filesystem
 /// @param fileSystem           This should be a pointer to the filesystem
@@ -60,6 +62,7 @@ bool FATFile::OpenFat1216RootDirectory(FATFileSystem* fileSystem, uint32_t rootD
         Debug::Error(module_name,"Read root directory failed!!");
         return false;
     }
+    return true;
 }
 
 /// @brief Reads a File entry
@@ -162,6 +165,10 @@ FileEntry* FATFile::ReadFileEntry(){
         return fileEntry;
     }
     return nullptr;
+}
+
+void FATFile::FreeFileEntry(FileEntry* fileEntry) {
+    fs->ReleaseFileEntry((FATFileEntry*)(fileEntry));
 }
 
 /// @brief Unsupported!!! THIS FUNCTION IS NOT YET IMPLEMENTED!

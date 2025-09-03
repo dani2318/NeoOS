@@ -1,12 +1,13 @@
 #pragma once
 #include "FileSystem.hpp"
-#include <FS/FAT/FATData.hpp>
-#include <FS/FAT/FATHeaders.hpp>
-#include <FS/FAT/FATFileEntry.hpp>
+#include <core/FS/FAT/FATData.hpp>
+#include <core/FS/FAT/FATHeaders.hpp>
+
 #include <stddef.h>
 
-constexpr int FATReqMemory = 0x10000;
+class FATFileEntry;
 
+constexpr int FATReqMemory = 0x10000;
 class FATFileSystem : public FileSystem{
     public:
         FATFileSystem();

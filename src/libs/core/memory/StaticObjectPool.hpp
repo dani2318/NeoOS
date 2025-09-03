@@ -36,7 +36,7 @@ T* StaticObjectPool<T, PoolSize>::Allocate(){
         if(ObjectInUse[idx] == false){
             ObjectInUse[idx] = true;
             size++;
-            return &ObjectInUse[idx];
+            return &Objects[idx];
         }
     }
     return nullptr;

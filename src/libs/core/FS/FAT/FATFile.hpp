@@ -10,7 +10,7 @@ struct FATDirectoryEntry;
 class FATFile : public File {
     public:
         FATFile();
-        bool Open(FATFileSystem* fileSystem, uint32_t firstCluster, uint32_t size, bool isDirectory);
+        bool Open(FATFileSystem* fileSystem, uint32_t firstCluster,const char* name, uint32_t size, bool isDirectory);
         bool OpenFat1216RootDirectory(FATFileSystem* fileSystem, uint32_t rootDirectoryLba, uint32_t rootDirectorySize);
         
         bool isOpened() const {return this->Opened;};
@@ -22,6 +22,7 @@ class FATFile : public File {
         virtual size_t Size() override { return size; };
         virtual size_t Position() override { return position; };
         virtual FileEntry* ReadFileEntry() override;
+        virtual void FreeFileEntry(FileEntry* fileEntry) override;
     private:
         bool UpdateCurrentCluster();
         uint8_t  Buffer[SectorSize];

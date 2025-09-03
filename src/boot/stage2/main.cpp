@@ -10,9 +10,9 @@
 #include <core/arch/i686/E9Device.hpp>
 #include <core/dev/TextDevice.hpp>
 #include <core/dev/RangedBlockDevice.hpp>
-#include <core/arch/i686/IO.hpp>
 #include <core/Debug.hpp>
 #include <boot/bootparams.hpp>
+#include <core/FS/FATFileSystem.hpp>
 
 
 arch::i686::VGATextDevice VGADevice;
@@ -32,7 +32,6 @@ EXPORT void ASMCALL Start(uint16_t bootDrive,uint32_t partition){
     BIOSDisk disk(bootDrive);
     if(!disk.Initialize()){
         Debug::Critical("Stage2", "[CRITICAL] Failed to initialize disk!");
-        arch::i686::Panic();
     }
     Debug::Info("Stage2", "[OK] Initialize disk!");
 
@@ -47,7 +46,10 @@ EXPORT void ASMCALL Start(uint16_t bootDrive,uint32_t partition){
     }
 
     Debug::Info("Stage2", "[OK] Checking disk partition!");
-
+    FATFileSystem fs;
+    if(!fs.Initialize(part)){
+        Debug::Critical("Stage2", "[CRITICAL] Failed to initialize FATFileSystem!");
+    }
 
 end:
     for(;;);

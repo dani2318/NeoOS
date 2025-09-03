@@ -74,16 +74,7 @@ bool FATFileSystem::Initialize(BlockDevice* device) {
     // Reading from the file system the Directory Entry of the Root Directory.
     if (isFAT32) {
         DataSectionLba = Data->BS.BootSector.ReservedSectors + SectorsPerFat * Data->BS.BootSector.FatCount;
-
-        // Initialize Root Directory
-        FileEntry rootEntry;
-        FATDirectoryEntry* rootDirectoryEntry = reinterpret_cast<FATDirectoryEntry*> (rootEntry.FSData);
-        rootDirectoryEntry->FirstClusterLow = Data->BS.BootSector.EBR32.RootdirCluster & 0xFFFF;
-        rootDirectoryEntry->FirstClusterHigh = Data->BS.BootSector.EBR32.RootdirCluster >> 16;
-        rootDirectoryEntry->Size = 0xFFFFFFFF;
-        uint32_t size = rootDirectoryEntry->Size;
-        uint32_t firstCluster = rootDirectoryEntry->FirstClusterLow + ((uint32_t)rootDirectoryEntry->FirstClusterHigh << 16);
-        if(!Data->RootDirectory.Open(this, Data->BS.BootSector.EBR32.RootdirCluster, 0xFFFFFFFF, true))
+        if(!Data->RootDirectory.Open(this, Data->BS.BootSector.EBR32.RootdirCluster,"", 0xFFFFFFFF, true))
             return false;
     } else {
         uint32_t rootDirLBA = Data->BS.BootSector.ReservedSectors + SectorsPerFat * Data->BS.BootSector.FatCount;
